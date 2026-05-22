@@ -1,0 +1,44 @@
+/* App */
+"app.title" = "StopPhone";
+
+/* Tabs */
+"tab.dashboard" = "Tableau de bord";
+"tab.settings" = "Réglages";
+
+/* Toggle */
+"status.enabled" = "Protection active";
+"status.disabled" = "Protection désactivée";
+"toggle.subtitle" = "Bloque les apps au-delà de 15 km/h";
+
+/* Speed */
+"threshold.label" = "Seuil : %d km/h";
+"speed.above" = "🚨 Blocage actif";
+"speed.below" = "Vitesse normale";
+
+/* Blocking */
+"blocking.active" = "Blocage en cours";
+"blocking.inactive" = "Aucun blocage";
+"block.social" = "Réseaux sociaux";
+"block.entertainment" = "Divertissement";
+"block.web" = "Web (réseaux sociaux)";
+
+/* Calls */
+"calls.title" = "Appels téléphoniques";
+"calls.body" = "iOS ne permet pas de bloquer les appels entrants depuis une app tierce. Activez le mode Focus « Conduite » dans Réglages pour limiter les interruptions.";
+"calls.focus.button" = "Ouvrir les Réglages →";
+
+/* Permissions */
+"permission.title" = "Autoriser le blocage d'apps";
+"permission.body" = "Requis pour bloquer les réseaux sociaux via Screen Time";
+
+/* Location */
+"location.denied.title" = "Localisation refusée";
+"location.denied.body" = "Autorisez l'accès à la localisation dans Réglages pour détecter votre vitesse.";
+
+/* Settings */
+"settings.title" = "Réglages";
+"settings.section.blocking" = "Apps à bloquer";
+"settings.section.footer" = "Sélectionnez les apps et catégories à bloquer automatiquement quand votre vitesse dépasse 15 km/h. Par défaut, toutes les catégories sont bloquées.";
+"settings.choose.apps" = "Choisir les apps à bloquer";
+"settings.default" = "Toutes (défaut)";
+"settings.reset" = "Réinitialiser la sélection";

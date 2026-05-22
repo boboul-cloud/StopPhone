@@ -1,0 +1,373 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5FFAC207E1B9457344F7A2F3 /* ManagedSettings.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6D57C21F8A7B65A6B4185AC /* ManagedSettings.framework */; };
+		69587F098F6D7FBB8406D19E /* StopPhoneApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D204371F0B1645213AA81459 /* StopPhoneApp.swift */; };
+		6FB67E891CCA2F0DF5090E8B /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF92241E3D37B91957BEE178 /* SettingsView.swift */; };
+		9E3576D013DDA824602EDD7E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15CAE1D70ACA7F757C143F69 /* ContentView.swift */; };
+		B185277A341C2FD6347B5C2E /* SpeedMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F614F03CC0577B6DC240772 /* SpeedMonitor.swift */; };
+		B5A455866FC8FD430A620087 /* FamilyControls.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1422A4983DB69FF5D4E4BC7F /* FamilyControls.framework */; };
+		B78AFEAB81BEA7071B9CB279 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 52D034FE249AF50E2C0566C7 /* Localizable.strings */; };
+		D6E1061478E1884885CEA8AD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 727F6CD1962AA8942980B65C /* Assets.xcassets */; };
+		E5361F8AB516D82EE2EBA9F8 /* BlockingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7150578B872D6B12863AD20F /* BlockingManager.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		1422A4983DB69FF5D4E4BC7F /* FamilyControls.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FamilyControls.framework; path = System/Library/Frameworks/FamilyControls.framework; sourceTree = SDKROOT; };
+		15CAE1D70ACA7F757C143F69 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		1873B7B1C2B8E7ED7A1D511D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		1EE51D0C665DA16A20647219 /* StopPhone.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = StopPhone.entitlements; sourceTree = "<group>"; };
+		5A73A055E069E5FDF20FFEB3 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		7150578B872D6B12863AD20F /* BlockingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockingManager.swift; sourceTree = "<group>"; };
+		727F6CD1962AA8942980B65C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		8AC1376B532FAED66B5B757D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		9F614F03CC0577B6DC240772 /* SpeedMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedMonitor.swift; sourceTree = "<group>"; };
+		A1732BA089C2B11913D80476 /* StopPhone.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = StopPhone.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AF92241E3D37B91957BEE178 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		D204371F0B1645213AA81459 /* StopPhoneApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopPhoneApp.swift; sourceTree = "<group>"; };
+		E6D57C21F8A7B65A6B4185AC /* ManagedSettings.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ManagedSettings.framework; path = System/Library/Frameworks/ManagedSettings.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		9A77C595B13E4CB536899A71 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B5A455866FC8FD430A620087 /* FamilyControls.framework in Frameworks */,
+				5FFAC207E1B9457344F7A2F3 /* ManagedSettings.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0035B498230F05E3AD2C6A8A /* StopPhone */ = {
+			isa = PBXGroup;
+			children = (
+				727F6CD1962AA8942980B65C /* Assets.xcassets */,
+				7150578B872D6B12863AD20F /* BlockingManager.swift */,
+				15CAE1D70ACA7F757C143F69 /* ContentView.swift */,
+				8AC1376B532FAED66B5B757D /* Info.plist */,
+				52D034FE249AF50E2C0566C7 /* Localizable.strings */,
+				AF92241E3D37B91957BEE178 /* SettingsView.swift */,
+				9F614F03CC0577B6DC240772 /* SpeedMonitor.swift */,
+				1EE51D0C665DA16A20647219 /* StopPhone.entitlements */,
+				D204371F0B1645213AA81459 /* StopPhoneApp.swift */,
+			);
+			path = StopPhone;
+			sourceTree = "<group>";
+		};
+		8EC73EDCB076106051AACCD7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A1732BA089C2B11913D80476 /* StopPhone.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		AB37381A0B91040DB3687468 = {
+			isa = PBXGroup;
+			children = (
+				0035B498230F05E3AD2C6A8A /* StopPhone */,
+				EE80E15EC6A53F3EEB82169D /* Frameworks */,
+				8EC73EDCB076106051AACCD7 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		EE80E15EC6A53F3EEB82169D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1422A4983DB69FF5D4E4BC7F /* FamilyControls.framework */,
+				E6D57C21F8A7B65A6B4185AC /* ManagedSettings.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1DA954ADE9DCC397DEC6A00F /* StopPhone */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C4BA0B8B629A6260631EC839 /* Build configuration list for PBXNativeTarget "StopPhone" */;
+			buildPhases = (
+				8832BD16A5D6AE2B4E3692CA /* Sources */,
+				16A9EBAC1FFE8E216045C0B2 /* Resources */,
+				9A77C595B13E4CB536899A71 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = StopPhone;
+			packageProductDependencies = (
+			);
+			productName = StopPhone;
+			productReference = A1732BA089C2B11913D80476 /* StopPhone.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2A9A8EB110BCDF5671023290 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					1DA954ADE9DCC397DEC6A00F = {
+						DevelopmentTeam = "";
+					};
+				};
+			};
+			buildConfigurationList = B71154D1981561B6063D1CBF /* Build configuration list for PBXProject "StopPhone" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+				fr,
+			);
+			mainGroup = AB37381A0B91040DB3687468;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1DA954ADE9DCC397DEC6A00F /* StopPhone */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		16A9EBAC1FFE8E216045C0B2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D6E1061478E1884885CEA8AD /* Assets.xcassets in Resources */,
+				B78AFEAB81BEA7071B9CB279 /* Localizable.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8832BD16A5D6AE2B4E3692CA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E5361F8AB516D82EE2EBA9F8 /* BlockingManager.swift in Sources */,
+				9E3576D013DDA824602EDD7E /* ContentView.swift in Sources */,
+				6FB67E891CCA2F0DF5090E8B /* SettingsView.swift in Sources */,
+				B185277A341C2FD6347B5C2E /* SpeedMonitor.swift in Sources */,
+				69587F098F6D7FBB8406D19E /* StopPhoneApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		52D034FE249AF50E2C0566C7 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1873B7B1C2B8E7ED7A1D511D /* en */,
+				5A73A055E069E5FDF20FFEB3 /* fr */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		2989DDA3E50280D7BE078333 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		399FEE5332CD607569AF9C0B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		6F5E02EAD4F0268C71034AE3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = StopPhone/StopPhone.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = StopPhone/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.stopphone.app;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		C5800B6C716AF4A45ACEFFBE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = StopPhone/StopPhone.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = StopPhone/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.stopphone.app;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		B71154D1981561B6063D1CBF /* Build configuration list for PBXProject "StopPhone" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2989DDA3E50280D7BE078333 /* Debug */,
+				399FEE5332CD607569AF9C0B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		C4BA0B8B629A6260631EC839 /* Build configuration list for PBXNativeTarget "StopPhone" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6F5E02EAD4F0268C71034AE3 /* Debug */,
+				C5800B6C716AF4A45ACEFFBE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 2A9A8EB110BCDF5671023290 /* Project object */;
+}

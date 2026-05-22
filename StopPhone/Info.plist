@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>UILaunchScreen</key>
+    <dict/>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>fr</string>
+    <key>CFBundleLocalizations</key>
+    <array>
+        <string>fr</string>
+        <string>en</string>
+    </array>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>StopPhone détecte votre vitesse pour bloquer certaines apps pendant la conduite.</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>StopPhone surveille votre vitesse en arrière-plan pour activer le blocage automatiquement.</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>StopPhone mesure votre vitesse pour bloquer certaines apps lorsque vous conduisez.</string>
+    <key>UIBackgroundModes</key>
+    <array>
+        <string>location</string>
+    </array>
+</dict>
+</plist>
