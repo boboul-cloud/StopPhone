@@ -23,6 +23,3 @@ targets:
         CODE_SIGN_STYLE: Automatic
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ENABLE_PREVIEWS: YES
-    dependencies:
-      - sdk: FamilyControls.framework
-      - sdk: ManagedSettings.framework

@@ -1,105 +1,71 @@
 import Combine
-import FamilyControls
 import Foundation
-import ManagedSettings
+import UserNotifications
 
-/// Manages Screen Time blocking via FamilyControls + ManagedSettings.
+/// Manages driving alerts.
 ///
-/// Two blocking modes:
-///  - Default  : shields every app category (.all) when no custom selection exists.
-///  - Custom   : shields only the apps/categories the user picked via FamilyActivityPicker.
-///
-/// NOTE: the `com.apple.developer.family-controls` entitlement must be
-/// added to the provisioning profile.
+/// True app-blocking requires the `com.apple.developer.family-controls`
+/// entitlement (Apple approval needed). Without it, we show a fullscreen
+/// overlay and a persistent local notification to deter phone use while driving.
 @MainActor
 final class BlockingManager: ObservableObject {
 
     // MARK: - Published state
 
-    @Published var isAuthorized: Bool = false
     @Published var isBlocking: Bool = false
-    @Published var authorizationError: String?
+    @Published var notificationsAuthorized: Bool = false
 
-    /// The apps/categories the user selected via FamilyActivityPicker.
-    /// Persisted across launches. Empty = block all categories.
-    @Published var activitySelection: FamilyActivitySelection = FamilyActivitySelection() {
-        didSet { persistSelection() }
-    }
+    // MARK: - Unused (kept for API compatibility with ContentView / SettingsView)
 
-    // MARK: - Private
-
-    private let store = ManagedSettingsStore()
-    private static let selectionKey = "stopphone_blocking_selection"
+    var isAuthorized: Bool { true }
+    var authorizationError: String? { nil }
 
     // MARK: - Init
 
     init() {
-        isAuthorized = AuthorizationCenter.shared.authorizationStatus == .approved
-        loadSelection()
-        if isAuthorized {
-            isBlocking = store.shield.applicationCategories != nil
-        }
+        Task { await checkNotificationStatus() }
     }
 
-    // MARK: - Authorization
+    // MARK: - Notification permission
 
     func requestAuthorization() async {
-        do {
-            try await AuthorizationCenter.shared.requestAuthorization(for: .individual)
-            isAuthorized = true
-            authorizationError = nil
-        } catch {
-            isAuthorized = false
-            authorizationError = error.localizedDescription
-        }
+        let center = UNUserNotificationCenter.current()
+        let granted = (try? await center.requestAuthorization(options: [.alert, .sound])) ?? false
+        notificationsAuthorized = granted
     }
 
-    // MARK: - Blocking
+    private func checkNotificationStatus() async {
+        let settings = await UNUserNotificationCenter.current().notificationSettings()
+        notificationsAuthorized = settings.authorizationStatus == .authorized
+    }
+
+    // MARK: - Blocking (overlay + notification)
 
     func applyBlocking() {
-        guard isAuthorized else { return }
-
-        let hasCustomSelection = !activitySelection.categoryTokens.isEmpty
-                                 || !activitySelection.applicationTokens.isEmpty
-
-        if hasCustomSelection {
-            if !activitySelection.categoryTokens.isEmpty {
-                store.shield.applicationCategories = .specific(
-                    activitySelection.categoryTokens,
-                    except: []
-                )
-                store.shield.webDomainCategories = .specific(
-                    activitySelection.categoryTokens,
-                    except: []
-                )
-            }
-            if !activitySelection.applicationTokens.isEmpty {
-                store.shield.applications = activitySelection.applicationTokens
-            }
-        } else {
-            // Default: shield all app categories (shows a driving warning overlay)
-            store.shield.applicationCategories = .all(except: [])
-        }
-
+        guard !isBlocking else { return }
         isBlocking = true
+        scheduleNotification()
     }
 
     func removeBlocking() {
-        store.clearAllSettings()
+        guard isBlocking else { return }
         isBlocking = false
+        UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: ["driving"])
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["driving"])
     }
 
-    // MARK: - Persistence
+    // MARK: - Private
 
-    private func persistSelection() {
-        guard let data = try? JSONEncoder().encode(activitySelection) else { return }
-        UserDefaults.standard.set(data, forKey: Self.selectionKey)
-    }
-
-    private func loadSelection() {
-        guard let data = UserDefaults.standard.data(forKey: Self.selectionKey),
-              let decoded = try? JSONDecoder().decode(FamilyActivitySelection.self, from: data)
-        else { return }
-        activitySelection = decoded
+    private func scheduleNotification() {
+        let content = UNMutableNotificationContent()
+        content.title = NSLocalizedString("notif.title", comment: "")
+        content.body  = NSLocalizedString("notif.body",  comment: "")
+        content.sound = .default
+        let request = UNNotificationRequest(
+            identifier: "driving",
+            content: content,
+            trigger: nil   // deliver immediately
+        )
+        UNUserNotificationCenter.current().add(request)
     }
 }

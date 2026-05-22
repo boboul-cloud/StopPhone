@@ -8,6 +8,57 @@
 /* Toggle */
 "status.enabled" = "Protection on";
 "status.disabled" = "Protection off";
+"toggle.subtitle" = "Alert above 15 km/h";
+
+/* Speed */
+"threshold.label" = "Threshold: %d km/h";
+"speed.above" = "🚨 Driving detected";
+"speed.below" = "Normal speed";
+
+/* Blocking */
+"blocking.active" = "Driving alert active";
+"blocking.inactive" = "No alert";
+"block.overlay" = "Alert screen";
+"block.overlay.sub" = "Covers the screen in red while driving";
+"block.notif" = "Notification";
+"block.notif.sub" = "Sound reminder when driving speed is detected";
+
+/* Overlay */
+"overlay.title" = "Put the phone down!";
+"overlay.subtitle" = "You're driving. Stay focused on the road.";
+"overlay.dismiss" = "I'm putting my phone down";
+
+/* Calls */
+"calls.title" = "Phone calls";
+"calls.body" = "iOS does not allow blocking incoming calls. Enable Focus \"Driving\" mode to reduce interruptions.";
+"calls.focus.button" = "Open Settings →";
+
+/* Permissions */
+"permission.notif.title" = "Allow notifications";
+"permission.notif.body" = "To receive a sound alert when driving is detected";
+
+/* Location */
+"location.denied.title" = "Location denied";
+"location.denied.body" = "Allow location access in Settings.";
+
+/* Settings */
+"settings.title" = "Settings";
+"settings.section.detection" = "Detection";
+"settings.section.detection.footer" = "Speed is measured via GPS. The 15 km/h threshold is fixed.";
+"settings.speed" = "Speed threshold";
+"settings.section.blocking" = "Active alerts";
+"settings.section.footer" = "Without Apple's Family Controls entitlement, only the alert screen and notifications are available.";
+"settings.section.permissions" = "Permissions";
+"settings.notif.allow" = "Notifications authorized";
+
+
+/* Tabs */
+"tab.dashboard" = "Dashboard";
+"tab.settings" = "Settings";
+
+/* Toggle */
+"status.enabled" = "Protection on";
+"status.disabled" = "Protection off";
 "toggle.subtitle" = "Blocks apps above 15 km/h";
 
 /* Speed */

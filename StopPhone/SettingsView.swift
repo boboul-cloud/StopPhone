@@ -1,33 +1,31 @@
-import FamilyControls
 import SwiftUI
 
-/// Lets the user pick which apps and categories to block when driving.
-/// Uses Apple's native FamilyActivityPicker (requires FamilyControls auth).
 struct SettingsView: View {
 
+    @EnvironmentObject private var speedMonitor: SpeedMonitor
     @EnvironmentObject private var blockingManager: BlockingManager
-    @State private var showPicker = false
 
     var body: some View {
         NavigationStack {
             List {
                 Section {
-                    Button {
-                        showPicker = true
-                    } label: {
-                        HStack {
-                            Label(String(localized: "settings.choose.apps"),
-                                  systemImage: "apps.iphone")
-                            Spacer()
-                            Text(selectionSummary)
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                            Image(systemName: "chevron.right")
-                                .font(.caption.weight(.bold))
-                                .foregroundStyle(.tertiary)
-                        }
+                    HStack {
+                        Label(String(localized: "settings.speed"), systemImage: "speedometer")
+                        Spacer()
+                        Text(String(format: "%.0f km/h", speedMonitor.speedThreshold))
+                            .foregroundStyle(.secondary)
                     }
-                    .disabled(!blockingManager.isAuthorized)
+                } header: {
+                    Text(String(localized: "settings.section.detection"))
+                } footer: {
+                    Text(String(localized: "settings.section.detection.footer"))
+                }
+
+                Section {
+                    InfoRow(icon: "📵", title: String(localized: "block.overlay"),
+                            detail: String(localized: "block.overlay.sub"))
+                    InfoRow(icon: "🔔", title: String(localized: "block.notif"),
+                            detail: String(localized: "block.notif.sub"))
                 } header: {
                     Text(String(localized: "settings.section.blocking"))
                 } footer: {
@@ -35,33 +33,36 @@ struct SettingsView: View {
                 }
 
                 Section {
-                    Button(role: .destructive) {
-                        blockingManager.activitySelection = FamilyActivitySelection()
+                    Button {
+                        Task { await blockingManager.requestAuthorization() }
                     } label: {
-                        Label(String(localized: "settings.reset"),
-                              systemImage: "arrow.counterclockwise")
+                        Label(String(localized: "settings.notif.allow"),
+                              systemImage: blockingManager.notificationsAuthorized
+                                  ? "checkmark.circle.fill" : "bell.badge")
+                            .foregroundStyle(blockingManager.notificationsAuthorized ? .green : .blue)
                     }
-                    .disabled(blockingManager.activitySelection.categoryTokens.isEmpty
-                              && blockingManager.activitySelection.applicationTokens.isEmpty)
+                    .disabled(blockingManager.notificationsAuthorized)
+                } header: {
+                    Text(String(localized: "settings.section.permissions"))
                 }
             }
             .navigationTitle(String(localized: "settings.title"))
-            .familyActivityPicker(
-                isPresented: $showPicker,
-                selection: $blockingManager.activitySelection
-            )
         }
     }
+}
 
-    private var selectionSummary: String {
-        let cats = blockingManager.activitySelection.categoryTokens.count
-        let apps = blockingManager.activitySelection.applicationTokens.count
-        if cats == 0 && apps == 0 {
-            return String(localized: "settings.default")
+private struct InfoRow: View {
+    let icon: String
+    let title: String
+    let detail: String
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Text(icon)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title).font(.subheadline.weight(.medium))
+                Text(detail).font(.caption).foregroundStyle(.secondary)
+            }
         }
-        var parts: [String] = []
-        if cats > 0 { parts.append("\(cats) catégorie\(cats > 1 ? "s" : "")") }
-        if apps > 0 { parts.append("\(apps) app\(apps > 1 ? "s" : "")") }
-        return parts.joined(separator: ", ")
     }
 }

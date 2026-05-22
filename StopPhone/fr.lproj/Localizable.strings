@@ -8,6 +8,57 @@
 /* Toggle */
 "status.enabled" = "Protection active";
 "status.disabled" = "Protection désactivée";
+"toggle.subtitle" = "Alerte au-delà de 15 km/h";
+
+/* Speed */
+"threshold.label" = "Seuil : %d km/h";
+"speed.above" = "🚨 Conduite détectée";
+"speed.below" = "Vitesse normale";
+
+/* Blocking */
+"blocking.active" = "Alerte conduite active";
+"blocking.inactive" = "Aucune alerte";
+"block.overlay" = "Écran d'alerte";
+"block.overlay.sub" = "Couvre l'écran en rouge pendant la conduite";
+"block.notif" = "Notification";
+"block.notif.sub" = "Rappel sonore dès que la vitesse est détectée";
+
+/* Overlay */
+"overlay.title" = "Posez le téléphone !";
+"overlay.subtitle" = "Vous conduisez. Restez concentré sur la route.";
+"overlay.dismiss" = "Je pose mon téléphone";
+
+/* Calls */
+"calls.title" = "Appels téléphoniques";
+"calls.body" = "iOS ne permet pas de bloquer les appels entrants. Activez le mode Focus « Conduite » pour limiter les interruptions.";
+"calls.focus.button" = "Ouvrir les Réglages →";
+
+/* Permissions */
+"permission.notif.title" = "Autoriser les notifications";
+"permission.notif.body" = "Pour recevoir une alerte sonore quand vous conduisez";
+
+/* Location */
+"location.denied.title" = "Localisation refusée";
+"location.denied.body" = "Autorisez l'accès à la localisation dans Réglages.";
+
+/* Settings */
+"settings.title" = "Réglages";
+"settings.section.detection" = "Détection";
+"settings.section.detection.footer" = "La vitesse est mesurée via le GPS. Le seuil de 15 km/h est fixe.";
+"settings.speed" = "Seuil de vitesse";
+"settings.section.blocking" = "Alertes activées";
+"settings.section.footer" = "Sans l'entitlement Apple « Family Controls », seuls l'écran d'alerte et les notifications sont disponibles.";
+"settings.section.permissions" = "Autorisations";
+"settings.notif.allow" = "Notifications autorisées";
+
+
+/* Tabs */
+"tab.dashboard" = "Tableau de bord";
+"tab.settings" = "Réglages";
+
+/* Toggle */
+"status.enabled" = "Protection active";
+"status.disabled" = "Protection désactivée";
 "toggle.subtitle" = "Bloque les apps au-delà de 15 km/h";
 
 /* Speed */

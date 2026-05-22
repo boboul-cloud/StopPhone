@@ -6,19 +6,25 @@ struct ContentView: View {
     @EnvironmentObject private var blockingManager: BlockingManager
 
     var body: some View {
-        TabView {
-            dashboardTab
-                .tabItem { Label(String(localized: "tab.dashboard"), systemImage: "speedometer") }
-            SettingsView()
-                .tabItem { Label(String(localized: "tab.settings"), systemImage: "gear") }
+        ZStack {
+            TabView {
+                dashboardTab
+                    .tabItem { Label(String(localized: "tab.dashboard"), systemImage: "speedometer") }
+                SettingsView()
+                    .tabItem { Label(String(localized: "tab.settings"), systemImage: "gear") }
+            }
+
+            // Fullscreen driving overlay
+            if blockingManager.isBlocking {
+                DrivingOverlay()
+                    .transition(.opacity.animation(.easeInOut(duration: 0.4)))
+            }
         }
         .task {
             if speedMonitor.authorizationStatus == .notDetermined {
                 speedMonitor.requestPermission()
             }
-            if !blockingManager.isAuthorized {
-                await blockingManager.requestAuthorization()
-            }
+            await blockingManager.requestAuthorization()
         }
         .onChange(of: speedMonitor.isAboveThreshold) { _, isAbove in
             guard speedMonitor.isEnabled else { return }
@@ -33,22 +39,24 @@ struct ContentView: View {
         }
     }
 
+    // MARK: - Dashboard Tab
+
     private var dashboardTab: some View {
         NavigationStack {
             ZStack {
-                backgroundGradient.ignoresSafeArea()
+                LinearGradient(
+                    colors: [Color(.systemBackground), Color(.secondarySystemBackground)],
+                    startPoint: .top, endPoint: .bottom
+                ).ignoresSafeArea()
 
                 ScrollView {
                     VStack(spacing: 16) {
                         enableToggleCard
                         speedCard
-                        blockingStatusCard
+                        statusCard
                         callsWarningCard
-                        if !blockingManager.isAuthorized {
-                            permissionCard
-                        }
-                        if let err = blockingManager.authorizationError {
-                            errorCard(err)
+                        if !blockingManager.notificationsAuthorized {
+                            notifPermissionCard
                         }
                         locationPermissionCard
                     }
@@ -61,22 +69,11 @@ struct ContentView: View {
         }
     }
 
-
-    // MARK: - Background
-
-    private var backgroundGradient: LinearGradient {
-        LinearGradient(
-            colors: [Color(.systemBackground), Color(.secondarySystemBackground)],
-            startPoint: .top,
-            endPoint: .bottom
-        )
-    }
-
     // MARK: - Enable Toggle Card
 
     private var enableToggleCard: some View {
         HStack(spacing: 14) {
-            Text("🛡️")
+            Text(speedMonitor.isEnabled ? "🛡️" : "💤")
                 .font(.system(size: 36))
 
             VStack(alignment: .leading, spacing: 2) {
@@ -146,41 +143,30 @@ struct ContentView: View {
         )
     }
 
-    // MARK: - Blocking Status Card
+    // MARK: - Status Card
 
-    private var blockingStatusCard: some View {
+    private var statusCard: some View {
         VStack(alignment: .leading, spacing: 12) {
             Label(
                 blockingManager.isBlocking
                     ? String(localized: "blocking.active")
                     : String(localized: "blocking.inactive"),
-                systemImage: blockingManager.isBlocking ? "shield.fill" : "shield"
+                systemImage: blockingManager.isBlocking ? "exclamationmark.shield.fill" : "shield"
             )
             .font(.headline)
             .foregroundStyle(blockingManager.isBlocking ? .red : .secondary)
 
             Divider()
 
-            BlockingRow(
-                emoji: "📱",
-                title: String(localized: "block.social"),
-                subtitle: "Instagram, TikTok, Snapchat, X…",
-                isBlocked: blockingManager.isBlocking
-            )
+            BlockingRow(emoji: "📵",
+                        title: String(localized: "block.overlay"),
+                        subtitle: String(localized: "block.overlay.sub"),
+                        isBlocked: blockingManager.isBlocking)
 
-            BlockingRow(
-                emoji: "🎬",
-                title: String(localized: "block.entertainment"),
-                subtitle: "YouTube, Netflix, jeux…",
-                isBlocked: blockingManager.isBlocking
-            )
-
-            BlockingRow(
-                emoji: "🌐",
-                title: String(localized: "block.web"),
-                subtitle: "Sites réseaux sociaux dans Safari",
-                isBlocked: blockingManager.isBlocking
-            )
+            BlockingRow(emoji: "🔔",
+                        title: String(localized: "block.notif"),
+                        subtitle: String(localized: "block.notif.sub"),
+                        isBlocked: blockingManager.isBlocking)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding()
@@ -202,7 +188,9 @@ struct ContentView: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
                 Button(String(localized: "calls.focus.button")) {
-                    openFocusSettings()
+                    if let url = URL(string: UIApplication.openSettingsURLString) {
+                        UIApplication.shared.open(url)
+                    }
                 }
                 .font(.caption.weight(.medium))
                 .foregroundStyle(.orange)
@@ -213,25 +201,23 @@ struct ContentView: View {
         .padding()
         .background(Color.orange.opacity(0.08))
         .clipShape(RoundedRectangle(cornerRadius: 20))
-        .overlay(
-            RoundedRectangle(cornerRadius: 20)
-                .strokeBorder(Color.orange.opacity(0.25), lineWidth: 1)
-        )
+        .overlay(RoundedRectangle(cornerRadius: 20)
+            .strokeBorder(Color.orange.opacity(0.25), lineWidth: 1))
     }
 
-    // MARK: - Permission Card
+    // MARK: - Notification Permission Card
 
-    private var permissionCard: some View {
+    private var notifPermissionCard: some View {
         Button {
             Task { await blockingManager.requestAuthorization() }
         } label: {
             HStack(spacing: 14) {
-                Text("🔐")
+                Text("🔔")
                     .font(.title2)
                 VStack(alignment: .leading, spacing: 3) {
-                    Text(String(localized: "permission.title"))
+                    Text(String(localized: "permission.notif.title"))
                         .font(.subheadline.weight(.semibold))
-                    Text(String(localized: "permission.body"))
+                    Text(String(localized: "permission.notif.body"))
                         .font(.caption)
                         .opacity(0.85)
                 }
@@ -247,6 +233,8 @@ struct ContentView: View {
             .clipShape(RoundedRectangle(cornerRadius: 20))
         }
     }
+
+    // MARK: - Location Permission Card
 
     private var locationPermissionCard: some View {
         Group {
@@ -282,20 +270,6 @@ struct ContentView: View {
         }
     }
 
-    private func errorCard(_ message: String) -> some View {
-        HStack(spacing: 12) {
-            Image(systemName: "exclamationmark.triangle.fill")
-                .foregroundStyle(.red)
-            Text(message)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding()
-        .background(Color.red.opacity(0.08))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
-    }
-
     // MARK: - Helpers
 
     private var speedEmoji: String {
@@ -317,11 +291,61 @@ struct ContentView: View {
         if speedMonitor.isAboveThreshold { return String(localized: "speed.above") }
         return String(localized: "speed.below")
     }
+}
 
-    private func openFocusSettings() {
-        // Opens the Settings app; there is no direct URL for Focus mode on iOS.
-        if let url = URL(string: UIApplication.openSettingsURLString) {
-            UIApplication.shared.open(url)
+// MARK: - DrivingOverlay
+
+struct DrivingOverlay: View {
+    @EnvironmentObject private var speedMonitor: SpeedMonitor
+    @EnvironmentObject private var blockingManager: BlockingManager
+    @State private var dismissed = false
+
+    var body: some View {
+        if !dismissed {
+            ZStack {
+                Color.red.opacity(0.95).ignoresSafeArea()
+
+                VStack(spacing: 28) {
+                    Spacer()
+
+                    Text("🚨")
+                        .font(.system(size: 80))
+
+                    Text(String(localized: "overlay.title"))
+                        .font(.system(size: 32, weight: .black, design: .rounded))
+                        .foregroundStyle(.white)
+                        .multilineTextAlignment(.center)
+
+                    Text(String(format: "%.0f km/h", speedMonitor.currentSpeedKmh))
+                        .font(.system(size: 56, weight: .bold, design: .rounded))
+                        .foregroundStyle(.white.opacity(0.9))
+
+                    Text(String(localized: "overlay.subtitle"))
+                        .font(.title3.weight(.medium))
+                        .foregroundStyle(.white.opacity(0.8))
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 32)
+
+                    Spacer()
+
+                    Button {
+                        dismissed = true
+                    } label: {
+                        Text(String(localized: "overlay.dismiss"))
+                            .font(.headline)
+                            .foregroundStyle(.red)
+                            .padding(.horizontal, 32)
+                            .padding(.vertical, 14)
+                            .background(.white)
+                            .clipShape(Capsule())
+                    }
+                    .padding(.bottom, 48)
+                }
+            }
+            .onChange(of: speedMonitor.isAboveThreshold) { _, isAbove in
+                // Re-show overlay if speed goes back up after dismissal
+                if isAbove { dismissed = false }
+            }
         }
     }
 }
@@ -346,8 +370,8 @@ private struct BlockingRow: View {
                     .foregroundStyle(.secondary)
             }
             Spacer()
-            Image(systemName: isBlocked ? "xmark.shield.fill" : "checkmark.circle")
-                .foregroundStyle(isBlocked ? .red : .green)
+            Image(systemName: isBlocked ? "checkmark.circle.fill" : "circle")
+                .foregroundStyle(isBlocked ? .red : .secondary)
                 .font(.title3)
         }
     }
