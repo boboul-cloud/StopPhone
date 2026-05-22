@@ -24,7 +24,7 @@ struct ContentView: View {
             if speedMonitor.authorizationStatus == .notDetermined {
                 speedMonitor.requestPermission()
             }
-            await blockingManager.requestNotificationAuthorization()
+            await blockingManager.requestAuthorization()
         }
         .onChange(of: speedMonitor.isAboveThreshold) { _, isAbove in
             guard speedMonitor.isEnabled else { return }
@@ -158,10 +158,27 @@ struct ContentView: View {
 
             Divider()
 
-            BlockingRow(emoji: "📵",
-                        title: String(localized: "block.overlay"),
-                        subtitle: String(localized: "block.overlay.sub"),
-                        isBlocked: blockingManager.isBlocking)
+            if blockingManager.isAuthorized {
+                let hasCustom = !blockingManager.activitySelection.categoryTokens.isEmpty
+                                || !blockingManager.activitySelection.applicationTokens.isEmpty
+                BlockingRow(
+                    emoji: "📵",
+                    title: hasCustom
+                        ? String(localized: "block.screentime.custom")
+                        : String(localized: "block.screentime.all"),
+                    subtitle: hasCustom
+                        ? String(format: String(localized: "block.screentime.custom.sub"),
+                                 blockingManager.activitySelection.categoryTokens.count
+                                 + blockingManager.activitySelection.applicationTokens.count)
+                        : String(localized: "block.screentime.all.sub"),
+                    isBlocked: blockingManager.isBlocking
+                )
+            } else {
+                BlockingRow(emoji: "📵",
+                            title: String(localized: "block.overlay"),
+                            subtitle: String(localized: "block.overlay.sub"),
+                            isBlocked: blockingManager.isBlocking)
+            }
 
             BlockingRow(emoji: "🔔",
                         title: String(localized: "block.notif"),

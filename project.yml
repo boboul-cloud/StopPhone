@@ -19,8 +19,10 @@ targets:
         CODE_SIGN_ENTITLEMENTS: StopPhone/StopPhone.entitlements
         SWIFT_VERSION: "6.0"
         TARGETED_DEVICE_FAMILY: "1"
-        DEVELOPMENT_TEAM: ""
+        DEVELOPMENT_TEAM: "38DQ8FW23J"
         CODE_SIGN_STYLE: Automatic
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ENABLE_PREVIEWS: YES
-    dependencies: []
+    dependencies:
+      - sdk: FamilyControls.framework
+      - sdk: ManagedSettings.framework

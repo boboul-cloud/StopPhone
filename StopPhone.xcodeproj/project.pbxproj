@@ -3,20 +3,23 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 63;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5FFAC207E1B9457344F7A2F3 /* ManagedSettings.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6D57C21F8A7B65A6B4185AC /* ManagedSettings.framework */; };
 		69587F098F6D7FBB8406D19E /* StopPhoneApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D204371F0B1645213AA81459 /* StopPhoneApp.swift */; };
 		6FB67E891CCA2F0DF5090E8B /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF92241E3D37B91957BEE178 /* SettingsView.swift */; };
 		9E3576D013DDA824602EDD7E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15CAE1D70ACA7F757C143F69 /* ContentView.swift */; };
 		B185277A341C2FD6347B5C2E /* SpeedMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F614F03CC0577B6DC240772 /* SpeedMonitor.swift */; };
+		B5A455866FC8FD430A620087 /* FamilyControls.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1422A4983DB69FF5D4E4BC7F /* FamilyControls.framework */; };
 		B78AFEAB81BEA7071B9CB279 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 52D034FE249AF50E2C0566C7 /* Localizable.strings */; };
 		D6E1061478E1884885CEA8AD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 727F6CD1962AA8942980B65C /* Assets.xcassets */; };
 		E5361F8AB516D82EE2EBA9F8 /* BlockingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7150578B872D6B12863AD20F /* BlockingManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1422A4983DB69FF5D4E4BC7F /* FamilyControls.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FamilyControls.framework; path = System/Library/Frameworks/FamilyControls.framework; sourceTree = SDKROOT; };
 		15CAE1D70ACA7F757C143F69 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		1873B7B1C2B8E7ED7A1D511D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		1EE51D0C665DA16A20647219 /* StopPhone.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = StopPhone.entitlements; sourceTree = "<group>"; };
@@ -25,10 +28,23 @@
 		727F6CD1962AA8942980B65C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8AC1376B532FAED66B5B757D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		9F614F03CC0577B6DC240772 /* SpeedMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedMonitor.swift; sourceTree = "<group>"; };
-		A1732BA089C2B11913D80476 /* StopPhone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StopPhone.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1732BA089C2B11913D80476 /* StopPhone.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = StopPhone.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AF92241E3D37B91957BEE178 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		D204371F0B1645213AA81459 /* StopPhoneApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopPhoneApp.swift; sourceTree = "<group>"; };
+		E6D57C21F8A7B65A6B4185AC /* ManagedSettings.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ManagedSettings.framework; path = System/Library/Frameworks/ManagedSettings.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		9A77C595B13E4CB536899A71 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B5A455866FC8FD430A620087 /* FamilyControls.framework in Frameworks */,
+				5FFAC207E1B9457344F7A2F3 /* ManagedSettings.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		0035B498230F05E3AD2C6A8A /* StopPhone */ = {
@@ -59,8 +75,18 @@
 			isa = PBXGroup;
 			children = (
 				0035B498230F05E3AD2C6A8A /* StopPhone */,
+				EE80E15EC6A53F3EEB82169D /* Frameworks */,
 				8EC73EDCB076106051AACCD7 /* Products */,
 			);
+			sourceTree = "<group>";
+		};
+		EE80E15EC6A53F3EEB82169D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1422A4983DB69FF5D4E4BC7F /* FamilyControls.framework */,
+				E6D57C21F8A7B65A6B4185AC /* ManagedSettings.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -72,6 +98,7 @@
 			buildPhases = (
 				8832BD16A5D6AE2B4E3692CA /* Sources */,
 				16A9EBAC1FFE8E216045C0B2 /* Resources */,
+				9A77C595B13E4CB536899A71 /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -92,6 +119,12 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					1DA954ADE9DCC397DEC6A00F = {
+						DevelopmentTeam = 38DQ8FW23J;
+						ProvisioningStyle = Automatic;
+					};
+				};
 			};
 			buildConfigurationList = B71154D1981561B6063D1CBF /* Build configuration list for PBXProject "StopPhone" */;
 			compatibilityVersion = "Xcode 14.0";
@@ -104,6 +137,7 @@
 			);
 			mainGroup = AB37381A0B91040DB3687468;
 			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -276,7 +310,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = StopPhone/StopPhone.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 38DQ8FW23J;
 				ENABLE_PREVIEWS = YES;
@@ -287,7 +321,6 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.stopphone.driver;
-				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -299,7 +332,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = StopPhone/StopPhone.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 38DQ8FW23J;
 				ENABLE_PREVIEWS = YES;
@@ -310,7 +343,6 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.stopphone.driver;
-				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = 1;
