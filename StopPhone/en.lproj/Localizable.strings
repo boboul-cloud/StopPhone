@@ -93,3 +93,19 @@
 "settings.choose.apps" = "Choose apps to block";
 "settings.default" = "All (default)";
 "settings.reset" = "Reset selection";
+
+/* Screen Time blocking rows */
+"block.screentime.all" = "Screen Time — All apps";
+"block.screentime.all.sub" = "All categories blocked via Screen Time";
+"block.screentime.custom" = "Screen Time — Custom selection";
+"block.screentime.custom.sub" = "%d app(s)/category(ies) blocked";
+
+/* Notif keys */
+"notif.title" = "🚨 Warning — Driving detected";
+"notif.body" = "Put your phone down. You are driving above 15 km/h.";
+
+/* Settings extra */
+"settings.section.alerts" = "Alerts";
+"settings.section.footer.default" = "By default, all app categories are blocked via Screen Time when you exceed 15 km/h.";
+"settings.section.footer.custom" = "Only the selected apps and categories are blocked.";
+"permission.title" = "Allow Screen Time";
