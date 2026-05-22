@@ -14,7 +14,7 @@ targets:
       - path: StopPhone
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.stopphone.app
+        PRODUCT_BUNDLE_IDENTIFIER: com.stopphone.driver
         INFOPLIST_FILE: StopPhone/Info.plist
         CODE_SIGN_ENTITLEMENTS: StopPhone/StopPhone.entitlements
         SWIFT_VERSION: "6.0"
