@@ -367,36 +367,10 @@ struct DrivingOverlay: View {
                 Spacer()
 
                 if dismissed {
-                    VStack(spacing: 12) {
+                    VStack(spacing: 16) {
                         Text(String(localized: "overlay.dismissed.hint"))
                             .font(.caption)
                             .foregroundStyle(.white.opacity(0.6))
-
-                        // Airplane mode — opens iOS Settings directly
-                        Button {
-                            if let url = URL(string: "App-Prefs:root=AIRPLANE_MODE") {
-                                UIApplication.shared.open(url)
-                            }
-                        } label: {
-                            HStack(spacing: 8) {
-                                Image(systemName: "airplane")
-                                    .font(.subheadline.weight(.semibold))
-                                VStack(alignment: .leading, spacing: 1) {
-                                    Text(String(localized: "overlay.airplane.mode"))
-                                        .font(.subheadline.weight(.semibold))
-                                    Text(String(localized: "overlay.airplane.mode.hint"))
-                                        .font(.caption2)
-                                        .opacity(0.8)
-                                }
-                            }
-                            .foregroundStyle(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding(.horizontal, 24)
-                            .padding(.vertical, 12)
-                            .background(Color.blue.opacity(0.7))
-                            .clipShape(Capsule())
-                            .overlay(Capsule().strokeBorder(.white.opacity(0.25), lineWidth: 1))
-                        }
 
                         Button {
                             showDisableConfirmation = true
@@ -411,7 +385,6 @@ struct DrivingOverlay: View {
                                 .overlay(Capsule().strokeBorder(.white.opacity(0.3), lineWidth: 1))
                         }
                     }
-                    .padding(.horizontal, 24)
                     .padding(.bottom, 48)
                 } else {
                     Button {
