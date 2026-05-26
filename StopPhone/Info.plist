@@ -29,7 +29,19 @@
 	<string>StopPhone mesure votre vitesse pour bloquer certaines apps lorsque vous conduisez.</string>
 	<key>UIBackgroundModes</key>
 	<array>
+		<string>audio</string>
 		<string>location</string>
+	</array>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>stopphone</string>
+			</array>
+			<key>CFBundleURLName</key>
+			<string>com.stopphone.url</string>
+		</dict>
 	</array>
 	<key>UILaunchScreen</key>
 	<dict/>

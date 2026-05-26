@@ -8,7 +8,7 @@
 /* Toggle */
 "status.enabled" = "Protection on";
 "status.disabled" = "Protection off";
-"toggle.subtitle" = "Alert above 15 km/h";
+"toggle.subtitle" = "Alert above %d km/h";
 
 /* Speed */
 "threshold.label" = "Threshold: %d km/h";
@@ -21,12 +21,18 @@
 "block.overlay" = "Alert screen";
 "block.overlay.sub" = "Covers the screen in red while driving";
 "block.notif" = "Notification";
-"block.notif.sub" = "Sound reminder when driving speed is detected";
+"block.notif.sub" = "Opens StopPhone automatically when driving is detected";
 
 /* Overlay */
 "overlay.title" = "Put the phone down!";
 "overlay.subtitle" = "You're driving. Stay focused on the road.";
 "overlay.dismiss" = "I'm putting my phone down";
+"overlay.dismissed.hint" = "Screen dismissed — focus on the road.";
+"overlay.disable" = "I'm not driving — disable StopPhone";
+"overlay.disable.confirm.title" = "Disable protection?";
+"overlay.disable.confirm.message" = "This will stop blocking apps and turn off StopPhone.";
+"overlay.disable.confirm.yes" = "Yes, disable protection";
+"overlay.disable.confirm.no" = "Cancel";
 
 /* Calls */
 "calls.title" = "Phone calls";
@@ -34,9 +40,6 @@
 "calls.focus.button" = "Open Settings →";
 
 /* Permissions */
-"permission.notif.title" = "Allow notifications";
-"permission.notif.body" = "To receive a sound alert when driving is detected";
-
 /* Location */
 "location.denied.title" = "Location denied";
 "location.denied.body" = "Allow location access in Settings.";
@@ -44,12 +47,51 @@
 /* Settings */
 "settings.title" = "Settings";
 "settings.section.detection" = "Detection";
-"settings.section.detection.footer" = "Speed is measured via GPS. The 15 km/h threshold is fixed.";
+"settings.section.detection.footer" = "Speed is measured via GPS. Adjust the threshold with the slider.";
 "settings.speed" = "Speed threshold";
 "settings.section.blocking" = "Active alerts";
-"settings.section.footer" = "Without Apple's Family Controls entitlement, only the alert screen and notifications are available.";
+"settings.section.footer" = "Without Apple's Family Controls entitlement, only the alert screen is available.";
 "settings.section.permissions" = "Permissions";
-"settings.notif.allow" = "Notifications authorized";
+
+/* Bluetooth vehicle trigger */
+"settings.section.bluetooth" = "Vehicle Bluetooth";
+"settings.bluetooth.trigger" = "Activate when car connects";
+"settings.bluetooth.device.any" = "Any Bluetooth device";
+"settings.bluetooth.learn" = "Use \"%@\"";
+"settings.bluetooth.none" = "No Bluetooth device connected";
+"settings.bluetooth.footer.off" = "Enable to automatically activate blocking when your car's Bluetooth connects.";
+"settings.bluetooth.footer.any" = "Blocking activates on any Bluetooth audio connection (hands-free, A2DP).";
+"settings.bluetooth.footer.specific" = "Blocking activates only when this specific Bluetooth device connects.";
+
+/* Shortcuts auto-launch guide */
+"settings.section.shortcuts" = "Auto-launch via Shortcuts";
+"settings.section.shortcuts.footer" = "The Shortcuts automation launches StopPhone automatically when your car Bluetooth connects, even if the app is closed.";
+"shortcuts.step1" = "Open the Shortcuts app";
+"shortcuts.step2" = "Go to Automation → + → Personal Automation";
+"shortcuts.step3" = "Choose \"Bluetooth\" → select your car → \"Connects\"";
+"shortcuts.step4" = "Add action \"Open URLs\" → enter: stopphone://activate";
+"shortcuts.open" = "Open Shortcuts app";
+
+/* Notifications */
+"notif.driving.title" = "🚨 Driving detected";
+"notif.driving.body" = "Do you want to open StopPhone?";
+"notif.action.open" = "Yes, open StopPhone";
+"notif.action.ignore" = "No, keep blocking";
+
+/* Voice alert (AVSpeechSynthesizer) */
+"speech.driving.alert" = "Driving detected. StopPhone is protecting you.";
+
+/* Demo mode */
+"demo.title" = "Test mode";
+"demo.subtitle" = "Simulates a vehicle at speed without taking your car.";
+"demo.start" = "Simulate driving at %d km/h";
+"demo.stop" = "Stop simulation";
+
+/* Total block */
+"settings.section.total.block" = "Emergency lock";
+"settings.total.block" = "Total phone lock";
+"settings.total.block.footer.on" = "All apps and websites are blocked when driving is detected.";
+"settings.total.block.footer.off" = "Only the selected apps are blocked. Enable this to block everything.";
 
 
 /* Tabs */
@@ -99,10 +141,8 @@
 "block.screentime.all.sub" = "All categories blocked via Screen Time";
 "block.screentime.custom" = "Screen Time — Custom selection";
 "block.screentime.custom.sub" = "%d app(s)/category(ies) blocked";
-
-/* Notif keys */
-"notif.title" = "🚨 Warning — Driving detected";
-"notif.body" = "Put your phone down. You are driving above 15 km/h.";
+"block.screentime.total" = "Emergency lock — All apps";
+"block.screentime.total.sub" = "All apps and websites blocked (total lock active)";
 
 /* Settings extra */
 "settings.section.alerts" = "Alerts";

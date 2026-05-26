@@ -4,6 +4,7 @@ struct ContentView: View {
 
     @EnvironmentObject private var speedMonitor: SpeedMonitor
     @EnvironmentObject private var blockingManager: BlockingManager
+    @EnvironmentObject private var bluetoothMonitor: BluetoothMonitor
 
     var body: some View {
         ZStack {
@@ -17,6 +18,7 @@ struct ContentView: View {
             // Fullscreen driving overlay
             if blockingManager.isBlocking {
                 DrivingOverlay()
+                    .id(blockingManager.blockingEpoch)
                     .transition(.opacity.animation(.easeInOut(duration: 0.4)))
             }
         }
@@ -25,17 +27,9 @@ struct ContentView: View {
                 speedMonitor.requestPermission()
             }
             await blockingManager.requestAuthorization()
-        }
-        .onChange(of: speedMonitor.isAboveThreshold) { _, isAbove in
-            guard speedMonitor.isEnabled else { return }
-            if isAbove {
-                blockingManager.applyBlocking()
-            } else {
-                blockingManager.removeBlocking()
-            }
-        }
-        .onChange(of: speedMonitor.isEnabled) { _, isEnabled in
-            if !isEnabled { blockingManager.removeBlocking() }
+            // Wire Combine observers that work in the background (replaces SwiftUI .onChange).
+            // The initial emission handles stale blocking cleanup automatically.
+            blockingManager.observeMonitors(speed: speedMonitor, bluetooth: bluetoothMonitor)
         }
     }
 
@@ -54,10 +48,8 @@ struct ContentView: View {
                         enableToggleCard
                         speedCard
                         statusCard
+                        demoCard
                         callsWarningCard
-                        if !blockingManager.notificationsAuthorized {
-                            notifPermissionCard
-                        }
                         locationPermissionCard
                     }
                     .padding(.horizontal)
@@ -81,7 +73,7 @@ struct ContentView: View {
                      ? String(localized: "status.enabled")
                      : String(localized: "status.disabled"))
                     .font(.headline)
-                Text(String(localized: "toggle.subtitle"))
+                Text(String(format: String(localized: "toggle.subtitle"), Int(speedMonitor.speedThreshold)))
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -162,15 +154,19 @@ struct ContentView: View {
                 let hasCustom = !blockingManager.activitySelection.categoryTokens.isEmpty
                                 || !blockingManager.activitySelection.applicationTokens.isEmpty
                 BlockingRow(
-                    emoji: "📵",
-                    title: hasCustom
-                        ? String(localized: "block.screentime.custom")
-                        : String(localized: "block.screentime.all"),
-                    subtitle: hasCustom
-                        ? String(format: String(localized: "block.screentime.custom.sub"),
-                                 blockingManager.activitySelection.categoryTokens.count
-                                 + blockingManager.activitySelection.applicationTokens.count)
-                        : String(localized: "block.screentime.all.sub"),
+                    emoji: blockingManager.totalBlockMode ? "🔒" : "📵",
+                    title: blockingManager.totalBlockMode
+                        ? String(localized: "block.screentime.total")
+                        : (hasCustom
+                            ? String(localized: "block.screentime.custom")
+                            : String(localized: "block.screentime.all")),
+                    subtitle: blockingManager.totalBlockMode
+                        ? String(localized: "block.screentime.total.sub")
+                        : (hasCustom
+                            ? String(format: String(localized: "block.screentime.custom.sub"),
+                                     blockingManager.activitySelection.categoryTokens.count
+                                     + blockingManager.activitySelection.applicationTokens.count)
+                            : String(localized: "block.screentime.all.sub")),
                     isBlocked: blockingManager.isBlocking
                 )
             } else {
@@ -189,6 +185,60 @@ struct ContentView: View {
         .padding()
         .background(.ultraThinMaterial)
         .clipShape(RoundedRectangle(cornerRadius: 20))
+    }
+
+    // MARK: - Demo Card
+
+    private var demoCard: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 8) {
+                Text("🧪")
+                    .font(.title2)
+                VStack(alignment: .leading, spacing: 2) {
+                    HStack(spacing: 6) {
+                        Text(String(localized: "demo.title"))
+                            .font(.subheadline.weight(.semibold))
+                        Text("DEMO")
+                            .font(.system(size: 10, weight: .bold))
+                            .foregroundStyle(.white)
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 2)
+                            .background(Color.orange)
+                            .clipShape(Capsule())
+                    }
+                    Text(String(localized: "demo.subtitle"))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                Spacer()
+            }
+
+            Button {
+                if speedMonitor.isDemoMode {
+                    speedMonitor.stopDemo()
+                } else {
+                    speedMonitor.startDemo()
+                }
+            } label: {
+                HStack(spacing: 8) {
+                    Image(systemName: speedMonitor.isDemoMode ? "stop.fill" : "play.fill")
+                    Text(speedMonitor.isDemoMode
+                         ? String(localized: "demo.stop")
+                         : String(format: String(localized: "demo.start"), Int(speedMonitor.demoSpeedKmh)))
+                }
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(.white)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 10)
+                .background(speedMonitor.isDemoMode ? Color.red : Color.orange)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+            }
+        }
+        .padding()
+        .background(Color.orange.opacity(0.07))
+        .clipShape(RoundedRectangle(cornerRadius: 20))
+        .overlay(RoundedRectangle(cornerRadius: 20)
+            .strokeBorder(Color.orange.opacity(0.3), lineWidth: 1))
     }
 
     // MARK: - Calls Warning Card
@@ -220,35 +270,6 @@ struct ContentView: View {
         .clipShape(RoundedRectangle(cornerRadius: 20))
         .overlay(RoundedRectangle(cornerRadius: 20)
             .strokeBorder(Color.orange.opacity(0.25), lineWidth: 1))
-    }
-
-    // MARK: - Notification Permission Card
-
-    private var notifPermissionCard: some View {
-        Button {
-            Task { await blockingManager.requestNotificationAuthorization() }
-        } label: {
-            HStack(spacing: 14) {
-                Text("🔔")
-                    .font(.title2)
-                VStack(alignment: .leading, spacing: 3) {
-                    Text(String(localized: "permission.notif.title"))
-                        .font(.subheadline.weight(.semibold))
-                    Text(String(localized: "permission.notif.body"))
-                        .font(.caption)
-                        .opacity(0.85)
-                }
-                Spacer()
-                Image(systemName: "chevron.right")
-                    .font(.caption.weight(.bold))
-            }
-            .foregroundStyle(.white)
-            .padding()
-            .background(
-                LinearGradient(colors: [.blue, .indigo], startPoint: .leading, endPoint: .trailing)
-            )
-            .clipShape(RoundedRectangle(cornerRadius: 20))
-        }
     }
 
     // MARK: - Location Permission Card
@@ -316,35 +337,56 @@ struct DrivingOverlay: View {
     @EnvironmentObject private var speedMonitor: SpeedMonitor
     @EnvironmentObject private var blockingManager: BlockingManager
     @State private var dismissed = false
+    @State private var showDisableConfirmation = false
 
     var body: some View {
-        if !dismissed {
-            ZStack {
-                Color.red.opacity(0.95).ignoresSafeArea()
+        ZStack {
+            Color.red.opacity(0.95).ignoresSafeArea()
 
-                VStack(spacing: 28) {
-                    Spacer()
+            VStack(spacing: 28) {
+                Spacer()
 
-                    Text("🚨")
-                        .font(.system(size: 80))
+                Text("🚨")
+                    .font(.system(size: 80))
 
-                    Text(String(localized: "overlay.title"))
-                        .font(.system(size: 32, weight: .black, design: .rounded))
-                        .foregroundStyle(.white)
-                        .multilineTextAlignment(.center)
+                Text(String(localized: "overlay.title"))
+                    .font(.system(size: 32, weight: .black, design: .rounded))
+                    .foregroundStyle(.white)
+                    .multilineTextAlignment(.center)
 
-                    Text(String(format: "%.0f km/h", speedMonitor.currentSpeedKmh))
-                        .font(.system(size: 56, weight: .bold, design: .rounded))
-                        .foregroundStyle(.white.opacity(0.9))
+                Text(String(format: "%.0f km/h", speedMonitor.currentSpeedKmh))
+                    .font(.system(size: 56, weight: .bold, design: .rounded))
+                    .foregroundStyle(.white.opacity(0.9))
 
-                    Text(String(localized: "overlay.subtitle"))
-                        .font(.title3.weight(.medium))
-                        .foregroundStyle(.white.opacity(0.8))
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal, 32)
+                Text(String(localized: "overlay.subtitle"))
+                    .font(.title3.weight(.medium))
+                    .foregroundStyle(.white.opacity(0.8))
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 32)
 
-                    Spacer()
+                Spacer()
 
+                if dismissed {
+                    VStack(spacing: 16) {
+                        Text(String(localized: "overlay.dismissed.hint"))
+                            .font(.caption)
+                            .foregroundStyle(.white.opacity(0.6))
+
+                        Button {
+                            showDisableConfirmation = true
+                        } label: {
+                            Text(String(localized: "overlay.disable"))
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundStyle(.white.opacity(0.85))
+                                .padding(.horizontal, 24)
+                                .padding(.vertical, 10)
+                                .background(.white.opacity(0.15))
+                                .clipShape(Capsule())
+                                .overlay(Capsule().strokeBorder(.white.opacity(0.3), lineWidth: 1))
+                        }
+                    }
+                    .padding(.bottom, 48)
+                } else {
                     Button {
                         dismissed = true
                     } label: {
@@ -359,10 +401,21 @@ struct DrivingOverlay: View {
                     .padding(.bottom, 48)
                 }
             }
-            .onChange(of: speedMonitor.isAboveThreshold) { _, isAbove in
-                // Re-show overlay if speed goes back up after dismissal
-                if isAbove { dismissed = false }
+        }
+        .confirmationDialog(
+            String(localized: "overlay.disable.confirm.title"),
+            isPresented: $showDisableConfirmation,
+            titleVisibility: .visible
+        ) {
+            Button(String(localized: "overlay.disable.confirm.yes"), role: .destructive) {
+                speedMonitor.setEnabled(false)
             }
+            Button(String(localized: "overlay.disable.confirm.no"), role: .cancel) {}
+        } message: {
+            Text(String(localized: "overlay.disable.confirm.message"))
+        }
+        .onChange(of: speedMonitor.isAboveThreshold) { _, isAbove in
+            if isAbove { dismissed = false }
         }
     }
 }
