@@ -116,12 +116,21 @@ struct SettingsView: View {
                     Text(String(localized: "settings.section.shortcuts.footer"))
                 }
 
-                // MARK: Total block
+                // MARK: Total block + Airplane mode
                 Section {
                     Toggle(isOn: $blockingManager.totalBlockMode) {
                         Label(String(localized: "settings.total.block"), systemImage: "lock.fill")
                     }
                     .tint(.red)
+
+                    Button {
+                        if let url = URL(string: "App-Prefs:root=AIRPLANE_MODE") {
+                            UIApplication.shared.open(url)
+                        }
+                    } label: {
+                        Label(String(localized: "settings.airplane.mode"), systemImage: "airplane")
+                            .foregroundStyle(.blue)
+                    }
                 } header: {
                     Text(String(localized: "settings.section.total.block"))
                 } footer: {

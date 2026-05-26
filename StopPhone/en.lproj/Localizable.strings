@@ -78,6 +78,11 @@
 "notif.action.open" = "Yes, open StopPhone";
 "notif.action.ignore" = "No, keep blocking";
 
+/* Airplane mode */
+"overlay.airplane.mode" = "Enable Airplane Mode";
+"overlay.airplane.mode.hint" = "Cuts all calls, messages and data";
+"settings.airplane.mode" = "Enable Airplane Mode";
+
 /* Voice alert (AVSpeechSynthesizer) */
 "speech.driving.alert" = "Driving detected. StopPhone is protecting you.";
 
