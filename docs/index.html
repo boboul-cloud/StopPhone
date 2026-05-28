@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StopPhone — Drive Safe, Stay Focused</title>
+  <meta name="description" content="StopPhone automatically blocks distracting apps when you're driving. Free, open-source iOS app using GPS and Bluetooth detection." />
+  <meta property="og:title" content="StopPhone — Drive Safe, Stay Focused" />
+  <meta property="og:description" content="Free iOS app that automatically blocks distracting apps while driving. GPS + Bluetooth. No account. No tracking." />
+  <meta property="og:type" content="website" />
+  <style>
+    :root {
+      --red: #FF3B30;
+      --orange: #FF9500;
+      --green: #34C759;
+      --blue: #007AFF;
+      --bg: #0A0A0F;
+      --surface: #14141C;
+      --surface2: #1C1C28;
+      --text: #F5F5F7;
+      --text-muted: #8E8E93;
+      --border: rgba(255,255,255,0.08);
+      --radius: 20px;
+      --radius-sm: 12px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ─── HERO ─────────────────────────────────────────────── */
+    .hero {
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 60px 24px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 10%, rgba(255,59,48,0.18) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 40% at 20% 80%, rgba(0,122,255,0.12) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .app-icon {
+      width: 120px;
+      height: 120px;
+      border-radius: 27px;
+      background: linear-gradient(145deg, #FF3B30, #FF6B35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 56px;
+      margin-bottom: 28px;
+      box-shadow: 0 20px 60px rgba(255,59,48,0.4), 0 4px 16px rgba(0,0,0,0.4);
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.8rem, 8vw, 5rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      background: linear-gradient(135deg, #fff 40%, rgba(255,255,255,0.55));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-tagline {
+      font-size: clamp(1.1rem, 3vw, 1.5rem);
+      color: var(--text-muted);
+      margin: 16px 0 40px;
+      max-width: 560px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      cursor: pointer;
+      border: none;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn:active { transform: translateY(0); }
+
+    .btn-primary {
+      background: var(--red);
+      color: #fff;
+      box-shadow: 0 8px 30px rgba(255,59,48,0.4);
+    }
+    .btn-primary:hover { box-shadow: 0 12px 40px rgba(255,59,48,0.55); }
+
+    .btn-secondary {
+      background: var(--surface2);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .badge-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 36px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .badge {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      padding: 6px 14px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .badge span { font-size: 1em; }
+
+    /* ─── SPEED DISPLAY ────────────────────────────────────── */
+    .speed-demo {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px 40px;
+      text-align: center;
+      margin: 60px auto 0;
+      max-width: 320px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .speed-number {
+      font-size: 5rem;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -0.04em;
+      color: var(--red);
+      line-height: 1;
+    }
+
+    .speed-unit { font-size: 1.4rem; color: var(--text-muted); margin-top: 4px; }
+
+    .speed-badge {
+      display: inline-block;
+      background: rgba(255,59,48,0.15);
+      color: var(--red);
+      border-radius: 50px;
+      padding: 6px 16px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-top: 14px;
+    }
+
+    /* ─── SECTIONS ──────────────────────────────────────────── */
+    section { padding: 80px 24px; }
+    .container { max-width: 900px; margin: 0 auto; }
+
+    .section-label {
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--red);
+      margin-bottom: 12px;
+    }
+
+    h2 {
+      font-size: clamp(1.8rem, 5vw, 2.8rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+
+    .section-sub {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      max-width: 560px;
+      margin-bottom: 48px;
+    }
+
+    /* ─── FEATURES GRID ─────────────────────────────────────── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .feature-card:hover {
+      border-color: rgba(255,59,48,0.35);
+      transform: translateY(-3px);
+    }
+
+    .feature-icon {
+      font-size: 2rem;
+      margin-bottom: 14px;
+      display: block;
+    }
+
+    .feature-card h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .feature-card p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* ─── HOW IT WORKS ──────────────────────────────────────── */
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      counter-reset: step;
+    }
+
+    .step {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px 28px;
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      counter-increment: step;
+    }
+
+    .step-num {
+      flex-shrink: 0;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255,59,48,0.15);
+      color: var(--red);
+      font-weight: 800;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .step-content h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .step-content p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* ─── SHORTCUTS ─────────────────────────────────────────── */
+    .code-block {
+      background: #0d1117;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 20px 24px;
+      font-family: "SF Mono", "Fira Code", monospace;
+      font-size: 0.9rem;
+      color: #79C0FF;
+      margin: 20px 0;
+      overflow-x: auto;
+    }
+
+    .url-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-family: monospace;
+      font-size: 0.9rem;
+      color: #79C0FF;
+      margin: 4px 0;
+    }
+
+    /* ─── PRIVACY ───────────────────────────────────────────── */
+    .privacy-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .privacy-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      text-align: center;
+    }
+
+    .privacy-card .icon { font-size: 2rem; margin-bottom: 10px; }
+    .privacy-card h3 { font-size: 0.9rem; font-weight: 700; margin-bottom: 6px; }
+    .privacy-card p { font-size: 0.8rem; color: var(--text-muted); }
+
+    /* ─── CTA ───────────────────────────────────────────────── */
+    .cta-section {
+      text-align: center;
+      background: linear-gradient(135deg, rgba(255,59,48,0.1), rgba(0,122,255,0.05));
+      border-top: 1px solid var(--border);
+    }
+
+    .cta-section h2 { margin-bottom: 12px; }
+
+    /* ─── FOOTER ────────────────────────────────────────────── */
+    footer {
+      padding: 40px 24px;
+      text-align: center;
+      border-top: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    footer a { color: var(--text-muted); text-decoration: none; }
+    footer a:hover { color: var(--text); }
+
+    /* ─── RESPONSIVE ────────────────────────────────────────── */
+    @media (max-width: 600px) {
+      .hero { padding: 48px 20px 60px; }
+      .speed-demo { padding: 24px; }
+      section { padding: 60px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── HERO ──────────────────────────────────────────────────── -->
+  <section class="hero">
+    <div class="app-icon">🛡️</div>
+
+    <h1>StopPhone</h1>
+    <p class="hero-tagline">
+      Automatically blocks distracting apps while you drive.<br>
+      GPS + Bluetooth. No account. No tracking. 100% free.
+    </p>
+
+    <div class="hero-cta">
+      <a href="https://github.com/boboul-cloud/StopPhone" class="btn btn-primary">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+        View on GitHub
+      </a>
+      <a href="https://github.com/boboul-cloud/StopPhone/releases" class="btn btn-secondary">
+        📦 Download
+      </a>
+    </div>
+
+    <div class="badge-row">
+      <div class="badge"><span>📱</span> iOS 17+</div>
+      <div class="badge"><span>🆓</span> Free & Open Source</div>
+      <div class="badge"><span>🔒</span> No Data Collection</div>
+      <div class="badge"><span>🇫🇷</span> FR + EN</div>
+    </div>
+
+    <div class="speed-demo">
+      <div class="speed-number">78</div>
+      <div class="speed-unit">km/h</div>
+      <div class="speed-badge">🚨 Driving detected</div>
+    </div>
+  </section>
+
+  <!-- ── FEATURES ───────────────────────────────────────────────── -->
+  <section style="background: var(--surface);">
+    <div class="container">
+      <div class="section-label">Features</div>
+      <h2>Everything you need to drive safely</h2>
+      <p class="section-sub">StopPhone combines GPS speed, Bluetooth detection, and Screen Time to keep your eyes on the road.</p>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <span class="feature-icon">🚗</span>
+          <h3>GPS Speed Detection</h3>
+          <p>Automatically activates above a configurable speed threshold (default 15 km/h). Anti-flutter hysteresis prevents false triggers.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">🔵</span>
+          <h3>Car Bluetooth Trigger</h3>
+          <p>Starts blocking the moment your car's hands-free system connects. Supports any HFP / A2DP Bluetooth device or a specific pinned car.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">📵</span>
+          <h3>Screen Time Blocking</h3>
+          <p>Uses Apple's Family Controls API to block apps and entire categories (Social, Games, Entertainment…). Or total block mode for zero distraction.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">🔴</span>
+          <h3>Full-screen Overlay</h3>
+          <p>A hard-to-ignore red alert covers the screen while driving, with a confirmation dialog to dismiss it.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">🔔</span>
+          <h3>Local Notification</h3>
+          <p>Sends a notification when driving is detected — with "Open StopPhone" / "Keep blocking" action buttons.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">🔊</span>
+          <h3>Voice Alert</h3>
+          <p>Speaks an alert through your car speakers via Bluetooth audio, so you hear it even without looking at your phone.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">⚡</span>
+          <h3>Shortcuts Automation</h3>
+          <p>URL scheme <code>stopphone://activate</code> lets you build a Siri Shortcut that launches StopPhone automatically when your car Bluetooth connects.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">🌍</span>
+          <h3>French & English</h3>
+          <p>Fully localised in French and English. The app detects your device language automatically.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── HOW IT WORKS ───────────────────────────────────────────── -->
+  <section>
+    <div class="container">
+      <div class="section-label">How it works</div>
+      <h2>Simple. Automatic. Reliable.</h2>
+      <p class="section-sub">No interaction needed while driving — StopPhone handles everything in the background.</p>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h3>Enable protection once</h3>
+            <p>Flip the toggle on the dashboard. Grant location (Always) and Family Controls permissions. That's it.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h3>Get in your car</h3>
+            <p>As soon as your car Bluetooth connects <em>or</em> your GPS speed exceeds the threshold, StopPhone activates automatically — even if the app is closed.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h3>Apps are blocked</h3>
+            <p>Selected apps are shielded by Screen Time. A full-screen red overlay appears. Your car speakers announce the alert. A notification is sent.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h3>Auto-disables when you stop</h3>
+            <p>When your speed drops below the threshold (with a 5 km/h hysteresis buffer) or your car Bluetooth disconnects, blocking is removed automatically.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SHORTCUTS ──────────────────────────────────────────────── -->
+  <section style="background: var(--surface);">
+    <div class="container">
+      <div class="section-label">Shortcuts</div>
+      <h2>Full automation with Siri Shortcuts</h2>
+      <p class="section-sub">Use the URL scheme to trigger StopPhone from any automation, even when the app is closed.</p>
+
+      <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:32px;">
+        <div class="url-pill">stopphone://activate</div>
+        <div class="url-pill">stopphone://deactivate</div>
+      </div>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content"><h3>Open the Shortcuts app</h3><p></p></div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content"><h3>Automation → + → Personal Automation</h3><p></p></div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h3>Choose Bluetooth → your car → Connects</h3>
+            <p></p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h3>Add action "Open URLs" → <code>stopphone://activate</code></h3>
+            <p>Repeat with "Disconnects" → <code>stopphone://deactivate</code> for auto-disabling too.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PRIVACY ────────────────────────────────────────────────── -->
+  <section>
+    <div class="container">
+      <div class="section-label">Privacy</div>
+      <h2>Your data stays on your phone</h2>
+      <p class="section-sub">StopPhone is designed with privacy by default. Zero telemetry, zero accounts, zero servers.</p>
+
+      <div class="privacy-grid">
+        <div class="privacy-card">
+          <div class="icon">🚫</div>
+          <h3>No data collection</h3>
+          <p>GPS speed is processed in real-time and never stored or transmitted.</p>
+        </div>
+        <div class="privacy-card">
+          <div class="icon">👤</div>
+          <h3>No account required</h3>
+          <p>No sign-up, no login, no email. Just install and use.</p>
+        </div>
+        <div class="privacy-card">
+          <div class="icon">🌐</div>
+          <h3>No network requests</h3>
+          <p>The app never contacts any server. Everything runs 100% offline.</p>
+        </div>
+        <div class="privacy-card">
+          <div class="icon">📖</div>
+          <h3>Open source</h3>
+          <p>The full source code is on GitHub. Audit it yourself anytime.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA ────────────────────────────────────────────────────── -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="section-label">Open source</div>
+      <h2>Build it yourself or contribute</h2>
+      <p class="section-sub" style="margin: 0 auto 36px;">
+        StopPhone is MIT-licensed and fully open source. Build it from Xcode, star the repo, or submit a pull request.
+      </p>
+      <div class="hero-cta">
+        <a href="https://github.com/boboul-cloud/StopPhone" class="btn btn-primary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+          View on GitHub
+        </a>
+        <a href="https://github.com/boboul-cloud/StopPhone/issues" class="btn btn-secondary">
+          💬 Open an Issue
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ─────────────────────────────────────────────────── -->
+  <footer>
+    <p>
+      Made with ❤️ to keep roads safer &nbsp;·&nbsp;
+      <a href="https://github.com/boboul-cloud/StopPhone">GitHub</a> &nbsp;·&nbsp;
+      <a href="https://github.com/boboul-cloud/StopPhone/blob/main/LICENSE">MIT License</a>
+    </p>
+    <p style="margin-top:8px; font-size:0.78rem; color:#555;">
+      StopPhone is not affiliated with Apple Inc.
+    </p>
+  </footer>
+
+</body>
+</html>
