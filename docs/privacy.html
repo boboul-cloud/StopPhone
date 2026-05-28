@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy Policy — StopPhone</title>
+  <meta name="description" content="StopPhone privacy policy. No data collection, no tracking, 100% on-device." />
+  <style>
+    :root {
+      --bg: #0A0A0F; --surface: #14141C; --surface2: #1C1C28;
+      --text: #F5F5F7; --text-muted: #8E8E93; --border: rgba(255,255,255,0.08);
+      --red: #FF3B30; --radius: 16px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg); color: var(--text);
+      line-height: 1.7; padding: 0 0 80px;
+    }
+    header {
+      padding: 40px 24px 32px;
+      border-bottom: 1px solid var(--border);
+      max-width: 720px; margin: 0 auto;
+    }
+    header a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; }
+    header a:hover { color: var(--text); }
+    .back { display: inline-flex; align-items: center; gap: 6px; margin-bottom: 24px; }
+    header h1 {
+      font-size: clamp(1.8rem, 5vw, 2.4rem); font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    .meta { color: var(--text-muted); font-size: 0.85rem; margin-top: 8px; }
+    .badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(52,199,89,0.15); color: #34C759;
+      border-radius: 50px; padding: 5px 14px; font-size: 0.8rem; font-weight: 600;
+      margin-top: 14px;
+    }
+    main { max-width: 720px; margin: 0 auto; padding: 40px 24px 0; }
+    h2 {
+      font-size: 1.2rem; font-weight: 700; margin: 36px 0 12px;
+      color: var(--text); letter-spacing: -0.01em;
+    }
+    h2:first-child { margin-top: 0; }
+    p { color: #C7C7CC; margin-bottom: 14px; }
+    ul { padding-left: 20px; margin-bottom: 14px; }
+    li { color: #C7C7CC; margin-bottom: 6px; }
+    .highlight {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 20px 24px; margin: 20px 0;
+    }
+    .highlight p { margin: 0; }
+    a { color: var(--red); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    hr { border: none; border-top: 1px solid var(--border); margin: 36px 0; }
+    footer {
+      max-width: 720px; margin: 40px auto 0; padding: 24px;
+      border-top: 1px solid var(--border);
+      text-align: center; color: var(--text-muted); font-size: 0.82rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html" class="back">← StopPhone</a>
+    <h1>Privacy Policy</h1>
+    <p class="meta">Last updated: May 2026</p>
+    <div class="badge">🔒 No data collected</div>
+  </header>
+
+  <main>
+
+    <div class="highlight">
+      <p><strong>Short version:</strong> StopPhone does not collect, store, or transmit any personal data. Everything runs 100% on your device. No account, no analytics, no network requests.</p>
+    </div>
+
+    <h2>1. Who we are</h2>
+    <p>StopPhone is a free, open-source iOS application developed by boboul-cloud. The source code is publicly available at <a href="https://github.com/boboul-cloud/StopPhone">github.com/boboul-cloud/StopPhone</a>.</p>
+
+    <h2>2. Data we collect</h2>
+    <p><strong>We collect no data whatsoever.</strong></p>
+    <p>Specifically, StopPhone does <em>not</em>:</p>
+    <ul>
+      <li>Collect or store your GPS location or speed</li>
+      <li>Record which apps you use or block</li>
+      <li>Track your driving sessions or routes</li>
+      <li>Send any information to any external server</li>
+      <li>Use analytics or crash-reporting SDKs</li>
+      <li>Display advertising</li>
+    </ul>
+
+    <h2>3. Permissions used</h2>
+    <p>StopPhone requests the following device permissions, used exclusively on-device:</p>
+    <ul>
+      <li><strong>Location (Always)</strong> — to measure your GPS speed in the background. Speed values are computed in real-time and never stored beyond the current app session.</li>
+      <li><strong>Family Controls (Screen Time)</strong> — to block selected apps via Apple's managed settings API. No information about blocked apps is transmitted.</li>
+      <li><strong>Notifications</strong> — to alert you when driving is detected. Notifications are local only (no push server involved).</li>
+    </ul>
+
+    <h2>4. Local storage (UserDefaults)</h2>
+    <p>The app stores a small set of preferences locally on your device using Apple's <code>UserDefaults</code> (standard iOS mechanism):</p>
+    <ul>
+      <li>Whether protection is enabled</li>
+      <li>Your chosen speed threshold</li>
+      <li>Your Bluetooth device preference</li>
+      <li>The selected apps/categories to block (stored as an encoded <code>FamilyActivitySelection</code>)</li>
+    </ul>
+    <p>This data never leaves your device.</p>
+
+    <h2>5. No third-party services</h2>
+    <p>StopPhone contains no third-party SDKs, no advertising networks, no analytics libraries, and makes zero network requests. There is no backend server.</p>
+
+    <h2>6. Children's privacy</h2>
+    <p>StopPhone does not knowingly collect information from children. As no data is collected from anyone, this applies equally to all users regardless of age.</p>
+
+    <h2>7. Changes to this policy</h2>
+    <p>This policy may be updated to reflect changes in the app's features. The "last updated" date at the top will reflect any changes. Continued use of the app after changes constitutes acceptance of the updated policy.</p>
+
+    <h2>8. Contact</h2>
+    <p>For any privacy-related questions, open an issue on GitHub: <a href="https://github.com/boboul-cloud/StopPhone/issues">github.com/boboul-cloud/StopPhone/issues</a></p>
+
+    <hr>
+
+    <h2>Politique de confidentialité (Français)</h2>
+    <p>StopPhone ne collecte, ne stocke et ne transmet aucune donnée personnelle. Tout fonctionne à 100 % sur votre appareil. Aucun compte, aucune analyse, aucune requête réseau.</p>
+    <p>Les permissions demandées (localisation, Screen Time, notifications) sont utilisées exclusivement en local, sur l'appareil. Vos préférences sont enregistrées dans les réglages système iOS (<code>UserDefaults</code>) et ne quittent jamais votre iPhone.</p>
+    <p>Pour toute question : <a href="https://github.com/boboul-cloud/StopPhone/issues">github.com/boboul-cloud/StopPhone/issues</a></p>
+
+  </main>
+
+  <footer>
+    <a href="index.html">StopPhone</a> &nbsp;·&nbsp;
+    <a href="terms.html">Terms &amp; Conditions</a> &nbsp;·&nbsp;
+    <a href="https://github.com/boboul-cloud/StopPhone">GitHub</a>
+  </footer>
+</body>
+</html>

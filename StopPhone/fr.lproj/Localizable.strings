@@ -72,6 +72,16 @@
 "shortcuts.step4" = "Ajouter l'action \"Ouvrir des URL\" → saisir : stopphone://activate";
 "shortcuts.open" = "Ouvrir Raccourcis";
 
+/* À propos */
+"about.section" = "À propos";
+"about.version" = "Version";
+"about.developer" = "Développeur";
+"about.developer.name" = "boboul-cloud";
+"about.website" = "Site web";
+"about.github" = "Code source sur GitHub";
+"about.privacy" = "Politique de confidentialité";
+"about.terms" = "Conditions d'utilisation";
+
 /* Notifications */
 "notif.driving.title" = "🚨 Conduite détectée";
 "notif.driving.body" = "Voulez-vous ouvrir StopPhone ?";

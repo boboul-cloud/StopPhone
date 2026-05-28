@@ -72,6 +72,16 @@
 "shortcuts.step4" = "Add action \"Open URLs\" → enter: stopphone://activate";
 "shortcuts.open" = "Open Shortcuts app";
 
+/* About */
+"about.section" = "About";
+"about.version" = "Version";
+"about.developer" = "Developer";
+"about.developer.name" = "boboul-cloud";
+"about.website" = "Website";
+"about.github" = "Source code on GitHub";
+"about.privacy" = "Privacy Policy";
+"about.terms" = "Terms & Conditions";
+
 /* Notifications */
 "notif.driving.title" = "🚨 Driving detected";
 "notif.driving.body" = "Do you want to open StopPhone?";

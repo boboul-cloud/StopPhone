@@ -189,6 +189,63 @@ struct SettingsView: View {
                         Text(err).font(.caption).foregroundStyle(.red)
                     }
                 }
+
+                // MARK: About
+                Section {
+                    // App identity row
+                    HStack(spacing: 14) {
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(LinearGradient(
+                                colors: [Color(red: 1, green: 0.23, blue: 0.19),
+                                         Color(red: 1, green: 0.42, blue: 0.21)],
+                                startPoint: .topLeading, endPoint: .bottomTrailing
+                            ))
+                            .frame(width: 48, height: 48)
+                            .overlay(Text("🛡️").font(.system(size: 26)))
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("StopPhone")
+                                .font(.headline)
+                            Text(String(format: "%@ %@ (%@)",
+                                        String(localized: "about.version"),
+                                        Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0",
+                                        Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "1"))
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                        Spacer()
+                    }
+                    .padding(.vertical, 4)
+
+                    // Developer
+                    HStack {
+                        Label(String(localized: "about.developer"), systemImage: "person.fill")
+                        Spacer()
+                        Text(String(localized: "about.developer.name"))
+                            .foregroundStyle(.secondary)
+                    }
+
+                    // Website
+                    Link(destination: URL(string: "https://boboul-cloud.github.io/StopPhone")!) {
+                        Label(String(localized: "about.website"), systemImage: "globe")
+                    }
+
+                    // GitHub
+                    Link(destination: URL(string: "https://github.com/boboul-cloud/StopPhone")!) {
+                        Label(String(localized: "about.github"), systemImage: "chevron.left.forwardslash.chevron.right")
+                    }
+
+                    // Privacy Policy
+                    Link(destination: URL(string: "https://boboul-cloud.github.io/StopPhone/privacy.html")!) {
+                        Label(String(localized: "about.privacy"), systemImage: "lock.shield")
+                    }
+
+                    // Terms & Conditions
+                    Link(destination: URL(string: "https://boboul-cloud.github.io/StopPhone/terms.html")!) {
+                        Label(String(localized: "about.terms"), systemImage: "doc.text")
+                    }
+                } header: {
+                    Text(String(localized: "about.section"))
+                }
             }
             .navigationTitle(String(localized: "settings.title"))
             .familyActivityPicker(
