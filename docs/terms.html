@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Terms &amp; Conditions — StopPhone</title>
-  <meta name="description" content="StopPhone terms and conditions of use." />
+  <title>Conditions d'utilisation / Terms &amp; Conditions — StopPhone</title>
+  <meta name="description" content="Conditions d'utilisation de StopPhone." />
   <style>
     :root {
       --bg: #0A0A0F; --surface: #14141C; --surface2: #1C1C28;
@@ -49,87 +49,211 @@
       background: rgba(255,149,0,0.1); border: 1px solid rgba(255,149,0,0.25);
       border-radius: var(--radius); padding: 20px 24px; margin: 20px 0;
     }
-    .warning p { margin: 0; }
-    a { color: var(--red); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    hr { border: none; border-top: 1px solid var(--border); margin: 36px 0; }
     footer {
-      max-width: 720px; margin: 40px auto 0; padding: 24px;
-      border-top: 1px solid var(--border);
-      text-align: center; color: var(--text-muted); font-size: 0.82rem;
+      max-width: 720px; margin: 60px auto 0;
+      padding: 32px 24px; border-top: 1px solid var(--border);
+      color: var(--text-muted); font-size: 0.85rem; text-align: center;
     }
+    footer a { color: var(--text-muted); text-decoration: none; }
+    footer a:hover { color: var(--text); }
+    /* ── Bilingual ─────────────────────────────────────────────── */
+    .en{display:none}.fr{display:block}
+    body.en-mode .en{display:block}body.en-mode .fr{display:none}
+    span.en{display:none}span.fr{display:inline}
+    body.en-mode span.en{display:inline}body.en-mode span.fr{display:none}
+    .lang-bar{position:fixed;top:16px;right:16px;z-index:999;display:flex;gap:6px}
+    .lang-btn{padding:6px 14px;border-radius:50px;font-size:.8rem;font-weight:700;border:1px solid var(--border);background:var(--surface2);color:var(--text-muted);cursor:pointer;transition:all .15s}
+    .lang-btn.active{background:var(--red);color:#fff;border-color:var(--red)}
   </style>
 </head>
 <body>
-  <header>
-    <a href="index.html" class="back">← StopPhone</a>
-    <h1>Terms &amp; Conditions</h1>
-    <p class="meta">Last updated: May 2026</p>
-    <div class="badge">⚠️ Please read carefully</div>
-  </header>
 
-  <main>
+<div class="lang-bar">
+  <button class="lang-btn active" id="btn-fr" onclick="setLang('fr')">🇫🇷 FR</button>
+  <button class="lang-btn" id="btn-en" onclick="setLang('en')">🇬🇧 EN</button>
+</div>
 
+<header>
+  <div class="back">
+    <a href="index.html">← <span class="fr">Accueil</span><span class="en">Home</span></a>
+  </div>
+  <h1>
+    <span class="fr">Conditions d'utilisation</span>
+    <span class="en">Terms &amp; Conditions</span>
+  </h1>
+  <div class="meta">
+    <span class="fr">Dernière mise à jour : janvier 2026</span>
+    <span class="en">Last updated: January 2026</span>
+  </div>
+  <div class="badge">⚠️ <span class="fr">Lisez attentivement</span><span class="en">Please read carefully</span></div>
+</header>
+
+<main>
+
+  <!-- 1 -->
+  <div class="fr">
+    <h2>1. Acceptation des conditions</h2>
+    <p>En téléchargeant, installant ou utilisant StopPhone (« l'Application »), vous acceptez d'être lié par les présentes conditions d'utilisation. Si vous n'acceptez pas ces conditions, veuillez ne pas utiliser l'Application.</p>
+  </div>
+  <div class="en">
+    <h2>1. Acceptance of Terms</h2>
+    <p>By downloading, installing, or using StopPhone (the "Application"), you agree to be bound by these Terms and Conditions. If you do not agree to these terms, please do not use the Application.</p>
+  </div>
+
+  <!-- 2 -->
+  <div class="fr">
+    <h2>2. Description du service</h2>
+    <p>StopPhone est une application iOS conçue pour aider les conducteurs à réduire les distractions au volant. Elle bloque automatiquement certaines applications lorsqu'une vitesse de déplacement est détectée ou lors de la connexion à un périphérique Bluetooth de voiture.</p>
+  </div>
+  <div class="en">
+    <h2>2. Description of Service</h2>
+    <p>StopPhone is an iOS application designed to help drivers reduce phone distractions while driving. It automatically blocks selected apps when movement speed is detected or when connected to a car Bluetooth device.</p>
+  </div>
+
+  <!-- 3 -->
+  <div class="fr">
+    <h2>3. Avertissement de sécurité important</h2>
     <div class="warning">
-      <p><strong>Important:</strong> StopPhone is a driver-assistance tool. It does <em>not</em> replace safe and responsible driving. You are always responsible for obeying traffic laws and driving safely.</p>
+      <p><strong>StopPhone est un outil d'aide à la sécurité routière, non un système de sécurité certifié.</strong> L'Application peut ne pas détecter tous les scénarios de conduite. Elle ne remplace pas votre responsabilité personnelle en tant que conducteur. Vous devez toujours respecter le code de la route et les lois locales concernant l'utilisation du téléphone au volant.</p>
     </div>
+    <p>Le développeur décline toute responsabilité en cas d'accident, de blessure ou de dommage résultant de l'utilisation ou du dysfonctionnement de l'Application.</p>
+  </div>
+  <div class="en">
+    <h2>3. Important Safety Disclaimer</h2>
+    <div class="warning">
+      <p><strong>StopPhone is a road safety assistance tool, not a certified safety system.</strong> The Application may not detect all driving scenarios. It does not replace your personal responsibility as a driver. You must always comply with traffic laws and local regulations regarding phone use while driving.</p>
+    </div>
+    <p>The developer disclaims all liability for any accident, injury, or damage resulting from the use or malfunction of the Application.</p>
+  </div>
 
-    <h2>1. Acceptance of terms</h2>
-    <p>By downloading, installing, or using StopPhone ("the App"), you agree to be bound by these Terms &amp; Conditions. If you do not agree, do not use the App.</p>
+  <!-- 4 -->
+  <div class="fr">
+    <h2>4. Licence d'utilisation</h2>
+    <p>Sous réserve du respect des présentes conditions, vous bénéficiez d'une licence personnelle, non exclusive, non transférable et révocable pour utiliser StopPhone sur vos appareils Apple.</p>
+    <p>Le code source de StopPhone est disponible sous licence MIT. Vous pouvez le consulter, le modifier et le redistribuer conformément aux termes de cette licence.</p>
+  </div>
+  <div class="en">
+    <h2>4. License Grant</h2>
+    <p>Subject to your compliance with these Terms, you are granted a personal, non-exclusive, non-transferable, revocable license to use StopPhone on your Apple devices.</p>
+    <p>StopPhone's source code is available under the MIT License. You may view, modify, and redistribute it in accordance with that license's terms.</p>
+  </div>
 
-    <h2>2. Description of the App</h2>
-    <p>StopPhone is a free, open-source iOS application that helps reduce phone distractions while driving by automatically blocking selected apps when driving speed or a Bluetooth vehicle connection is detected.</p>
-
-    <h2>3. No safety guarantee</h2>
-    <p>StopPhone is provided as a <em>best-effort</em> tool to help reduce phone use while driving. It does <strong>not</strong> guarantee:</p>
+  <!-- 5 -->
+  <div class="fr">
+    <h2>5. Restrictions d'utilisation</h2>
+    <p>Vous vous engagez à ne pas :</p>
     <ul>
-      <li>That all apps will be blocked in all circumstances</li>
-      <li>That GPS detection will be accurate at all times</li>
-      <li>That Bluetooth detection will fire reliably for every vehicle</li>
-      <li>That using the app prevents accidents or complies with local laws</li>
+      <li>Modifier, décompiler ou désassembler l'Application (sauf dans les limites autorisées par la loi)</li>
+      <li>Utiliser l'Application à des fins illégales ou non autorisées</li>
+      <li>Tenter de contourner les fonctionnalités de blocage de l'Application</li>
     </ul>
-    <p>You remain solely responsible for your driving behaviour and compliance with applicable traffic laws.</p>
-
-    <h2>4. Limitation of liability</h2>
-    <p>To the maximum extent permitted by applicable law, the developer of StopPhone shall not be liable for any direct, indirect, incidental, special, consequential, or punitive damages arising from the use or inability to use the App, including but not limited to:</p>
+  </div>
+  <div class="en">
+    <h2>5. Restrictions</h2>
+    <p>You agree not to:</p>
     <ul>
-      <li>Road accidents or injuries</li>
-      <li>Traffic violations or fines</li>
-      <li>Loss of data or device damage</li>
-      <li>Failure of the blocking feature</li>
+      <li>Modify, decompile, or disassemble the Application (except as permitted by law)</li>
+      <li>Use the Application for any illegal or unauthorized purpose</li>
+      <li>Attempt to circumvent or defeat the blocking features of the Application</li>
     </ul>
+  </div>
 
-    <h2>5. Use at your own risk</h2>
-    <p>The App is provided "as is" and "as available" without warranties of any kind, express or implied. Use of the App is entirely at your own risk.</p>
+  <!-- 6 -->
+  <div class="fr">
+    <h2>6. Autorisations requises</h2>
+    <p>StopPhone nécessite les autorisations suivantes pour fonctionner :</p>
+    <ul>
+      <li><strong>Localisation (Toujours)</strong> — pour la détection de vitesse en arrière-plan</li>
+      <li><strong>Contrôle du temps d'écran (FamilyControls)</strong> — pour le blocage des applications</li>
+      <li><strong>Bluetooth</strong> — pour la détection de l'autoradio</li>
+      <li><strong>Notifications</strong> — pour les alertes lors de la détection de conduite</li>
+    </ul>
+    <p>En accordant ces autorisations, vous comprenez leur utilisation telle que décrite dans notre <a href="privacy.html" style="color:var(--orange)">politique de confidentialité</a>.</p>
+  </div>
+  <div class="en">
+    <h2>6. Required Permissions</h2>
+    <p>StopPhone requires the following permissions to function:</p>
+    <ul>
+      <li><strong>Location (Always)</strong> — for background speed detection</li>
+      <li><strong>Screen Time (FamilyControls)</strong> — for app blocking</li>
+      <li><strong>Bluetooth</strong> — for car stereo detection</li>
+      <li><strong>Notifications</strong> — for driving detection alerts</li>
+    </ul>
+    <p>By granting these permissions, you understand their use as described in our <a href="privacy.html" style="color:var(--orange)">Privacy Policy</a>.</p>
+  </div>
 
-    <h2>6. Apple's Family Controls</h2>
-    <p>The app blocking feature relies on Apple's Family Controls / Screen Time API. The availability and behaviour of this feature is subject to Apple's own terms of service and may vary across iOS versions or device configurations. The developer makes no guarantees regarding the availability of this feature.</p>
+  <!-- 7 -->
+  <div class="fr">
+    <h2>7. Limitation de responsabilité</h2>
+    <p>Dans toute la mesure permise par la loi applicable, le développeur ne saurait être tenu responsable de tout dommage indirect, accessoire, spécial, consécutif ou punitif, incluant notamment :</p>
+    <ul>
+      <li>Les accidents de la route ou blessures</li>
+      <li>La perte de données</li>
+      <li>Les dysfonctionnements liés au GPS ou au Bluetooth</li>
+      <li>L'incompatibilité avec certains appareils ou versions iOS</li>
+    </ul>
+  </div>
+  <div class="en">
+    <h2>7. Limitation of Liability</h2>
+    <p>To the fullest extent permitted by applicable law, the developer shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including but not limited to:</p>
+    <ul>
+      <li>Traffic accidents or personal injury</li>
+      <li>Loss of data</li>
+      <li>GPS or Bluetooth malfunctions</li>
+      <li>Incompatibility with certain devices or iOS versions</li>
+    </ul>
+  </div>
 
-    <h2>7. Intellectual property</h2>
-    <p>StopPhone is open-source software released under the MIT License. You are free to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the software in accordance with the <a href="https://github.com/boboul-cloud/StopPhone/blob/main/LICENSE">MIT License</a>.</p>
+  <!-- 8 -->
+  <div class="fr">
+    <h2>8. Exclusion de garanties</h2>
+    <p>StopPhone est fourni « en l'état » et « selon disponibilité », sans garantie d'aucune sorte, explicite ou implicite. Le développeur ne garantit pas que l'Application sera exempte d'erreurs, ininterrompue, ou qu'elle détectera tous les scénarios de conduite.</p>
+  </div>
+  <div class="en">
+    <h2>8. Disclaimer of Warranties</h2>
+    <p>StopPhone is provided "as is" and "as available," without warranty of any kind, express or implied. The developer does not warrant that the Application will be error-free, uninterrupted, or that it will detect all driving scenarios.</p>
+  </div>
 
-    <h2>8. Updates</h2>
-    <p>The developer reserves the right to modify the App and these Terms at any time. Continued use of the App after any changes constitutes acceptance of the new Terms.</p>
+  <!-- 9 -->
+  <div class="fr">
+    <h2>9. Modifications des conditions</h2>
+    <p>Le développeur se réserve le droit de modifier ces conditions à tout moment. Les modifications entrent en vigueur dès leur publication sur cette page. En continuant à utiliser l'Application après la publication de modifications, vous acceptez les nouvelles conditions.</p>
+  </div>
+  <div class="en">
+    <h2>9. Changes to These Terms</h2>
+    <p>The developer reserves the right to modify these Terms at any time. Changes take effect upon publication on this page. Your continued use of the Application after changes are posted constitutes acceptance of the revised Terms.</p>
+  </div>
 
-    <h2>9. Governing law</h2>
-    <p>These Terms shall be governed by and construed in accordance with French law, without regard to its conflict of law provisions.</p>
-
+  <!-- 10 -->
+  <div class="fr">
     <h2>10. Contact</h2>
-    <p>For any questions about these Terms, please open an issue on GitHub: <a href="https://github.com/boboul-cloud/StopPhone/issues">github.com/boboul-cloud/StopPhone/issues</a></p>
+    <p>Pour toute question concernant ces conditions d'utilisation, veuillez ouvrir une issue sur le <a href="https://github.com/boboul-cloud/StopPhone/issues" style="color:var(--orange)">dépôt GitHub de StopPhone</a>.</p>
+  </div>
+  <div class="en">
+    <h2>10. Contact</h2>
+    <p>For any questions regarding these Terms and Conditions, please open an issue on the <a href="https://github.com/boboul-cloud/StopPhone/issues" style="color:var(--orange)">StopPhone GitHub repository</a>.</p>
+  </div>
 
-    <hr>
+</main>
 
-    <h2>Conditions d'utilisation (Français)</h2>
-    <p>En utilisant StopPhone, vous acceptez les présentes conditions. StopPhone est un outil d'aide à la conduite fourni sans garantie. Vous restez seul responsable de votre conduite et du respect du code de la route.</p>
-    <p>Le développeur décline toute responsabilité pour tout dommage direct ou indirect lié à l'utilisation de l'application, y compris les accidents de la route, les infractions ou la défaillance du système de blocage.</p>
-    <p>L'application est publiée sous licence MIT. Le code source est disponible sur <a href="https://github.com/boboul-cloud/StopPhone">GitHub</a>.</p>
+<footer>
+  <p>
+    <span class="fr">© 2026 Robert Oulhen · StopPhone · </span>
+    <span class="en">© 2026 Robert Oulhen · StopPhone · </span>
+    <a href="privacy.html"><span class="fr">Politique de confidentialité</span><span class="en">Privacy Policy</span></a>
+    &nbsp;·&nbsp;
+    <a href="index.html"><span class="fr">Accueil</span><span class="en">Home</span></a>
+  </p>
+</footer>
 
-  </main>
-
-  <footer>
-    <a href="index.html">StopPhone</a> &nbsp;·&nbsp;
-    <a href="privacy.html">Privacy Policy</a> &nbsp;·&nbsp;
-    <a href="https://github.com/boboul-cloud/StopPhone">GitHub</a>
-  </footer>
+<script>
+  function setLang(lang){
+    if(lang==='en'){document.body.classList.add('en-mode');document.getElementById('btn-en').classList.add('active');document.getElementById('btn-fr').classList.remove('active');document.documentElement.lang='en';}
+    else{document.body.classList.remove('en-mode');document.getElementById('btn-fr').classList.add('active');document.getElementById('btn-en').classList.remove('active');document.documentElement.lang='fr';}
+    localStorage.setItem('sp_lang',lang);
+  }
+  const saved=localStorage.getItem('sp_lang');
+  if(saved){setLang(saved);}else if(navigator.language&&!navigator.language.startsWith('fr')){setLang('en');}
+</script>
 </body>
 </html>

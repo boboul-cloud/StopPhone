@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>StopPhone — Drive Safe, Stay Focused</title>
-  <meta name="description" content="StopPhone automatically blocks distracting apps when you're driving. Free, open-source iOS app using GPS and Bluetooth detection." />
-  <meta property="og:title" content="StopPhone — Drive Safe, Stay Focused" />
-  <meta property="og:description" content="Free iOS app that automatically blocks distracting apps while driving. GPS + Bluetooth. No account. No tracking." />
+  <title>StopPhone — Conduisez sans distraction</title>
+  <meta name="description" content="StopPhone bloque automatiquement les apps distrayantes pendant la conduite. App iOS gratuite, open-source, GPS + Bluetooth." />
+  <meta property="og:title" content="StopPhone — Conduisez sans distraction" />
+  <meta property="og:description" content="App iOS gratuite qui bloque automatiquement les apps pendant la conduite. GPS + Bluetooth. Sans compte. Sans tracking." />
   <meta property="og:type" content="website" />
   <style>
     :root {
@@ -364,22 +364,52 @@
     footer a { color: var(--text-muted); text-decoration: none; }
     footer a:hover { color: var(--text); }
 
+    /* ─── LANG TOGGLE ──────────────────────────────────────── */
+    .lang-bar {
+      position: fixed; top: 16px; right: 16px; z-index: 999;
+      display: flex; gap: 6px;
+    }
+    .lang-btn {
+      padding: 6px 14px; border-radius: 50px; font-size: 0.8rem;
+      font-weight: 700; border: 1px solid var(--border);
+      background: var(--surface2); color: var(--text-muted);
+      cursor: pointer; transition: all .15s;
+    }
+    .lang-btn.active { background: var(--red); color: #fff; border-color: var(--red); }
+    .lang-btn:hover:not(.active) { color: var(--text); }
+
+    .en { display: none; } .fr { display: block; }
+    body.en-mode .en { display: block; } body.en-mode .fr { display: none; }
+    span.en { display: none; } span.fr { display: inline; }
+    body.en-mode span.en { display: inline; } body.en-mode span.fr { display: none; }
+
     /* ─── RESPONSIVE ────────────────────────────────────────── */
     @media (max-width: 600px) {
       .hero { padding: 48px 20px 60px; }
       .speed-demo { padding: 24px; }
       section { padding: 60px 20px; }
+      .lang-bar { top: 10px; right: 10px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- ── HERO ──────────────────────────────────────────────────── -->
+  <!-- ── LANG TOGGLE ── -->
+  <div class="lang-bar">
+    <button class="lang-btn active" id="btn-fr" onclick="setLang('fr')">🇫🇷 FR</button>
+    <button class="lang-btn" id="btn-en" onclick="setLang('en')">🇬🇧 EN</button>
+  </div>
+
+  <!-- ── HERO ── -->
   <section class="hero">
     <div class="app-icon">🛡️</div>
-
     <h1>StopPhone</h1>
-    <p class="hero-tagline">
+
+    <p class="hero-tagline fr">
+      Bloque automatiquement les apps distrayantes pendant la conduite.<br>
+      GPS + Bluetooth. Sans compte. Sans tracking. 100&nbsp;% gratuit.
+    </p>
+    <p class="hero-tagline en">
       Automatically blocks distracting apps while you drive.<br>
       GPS + Bluetooth. No account. No tracking. 100% free.
     </p>
@@ -387,127 +417,152 @@
     <div class="hero-cta">
       <a href="https://github.com/boboul-cloud/StopPhone" class="btn btn-primary">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
-        View on GitHub
+        <span class="fr">Voir sur GitHub</span><span class="en">View on GitHub</span>
       </a>
       <a href="https://github.com/boboul-cloud/StopPhone/releases" class="btn btn-secondary">
-        📦 Download
+        <span class="fr">📦 Télécharger</span><span class="en">📦 Download</span>
       </a>
     </div>
 
     <div class="badge-row">
       <div class="badge"><span>📱</span> iOS 17+</div>
-      <div class="badge"><span>🆓</span> Free & Open Source</div>
-      <div class="badge"><span>🔒</span> No Data Collection</div>
+      <div class="badge"><span>🆓</span> <span class="fr">Gratuit &amp; Open Source</span><span class="en">Free &amp; Open Source</span></div>
+      <div class="badge"><span>🔒</span> <span class="fr">Aucune donnée collectée</span><span class="en">No Data Collection</span></div>
       <div class="badge"><span>🇫🇷</span> FR + EN</div>
     </div>
 
     <div class="speed-demo">
       <div class="speed-number">78</div>
       <div class="speed-unit">km/h</div>
-      <div class="speed-badge">🚨 Driving detected</div>
+      <div class="speed-badge fr">🚨 Conduite détectée</div>
+      <div class="speed-badge en">🚨 Driving detected</div>
     </div>
   </section>
 
-  <!-- ── FEATURES ───────────────────────────────────────────────── -->
+  <!-- ── FEATURES ── -->
   <section style="background: var(--surface);">
     <div class="container">
-      <div class="section-label">Features</div>
-      <h2>Everything you need to drive safely</h2>
-      <p class="section-sub">StopPhone combines GPS speed, Bluetooth detection, and Screen Time to keep your eyes on the road.</p>
+      <div class="section-label fr">Fonctionnalités</div>
+      <div class="section-label en">Features</div>
+      <h2 class="fr">Tout ce qu'il faut pour conduire sereinement</h2>
+      <h2 class="en">Everything you need to drive safely</h2>
+      <p class="section-sub fr">StopPhone combine GPS, Bluetooth et Screen Time pour garder vos yeux sur la route.</p>
+      <p class="section-sub en">StopPhone combines GPS speed, Bluetooth detection, and Screen Time to keep your eyes on the road.</p>
 
       <div class="features-grid">
         <div class="feature-card">
           <span class="feature-icon">🚗</span>
-          <h3>GPS Speed Detection</h3>
-          <p>Automatically activates above a configurable speed threshold (default 15 km/h). Anti-flutter hysteresis prevents false triggers.</p>
+          <h3 class="fr">Détection GPS</h3><h3 class="en">GPS Speed Detection</h3>
+          <p class="fr">S'active automatiquement au-dessus d'un seuil configurable (15 km/h par défaut). Hystérésis anti-faux déclenchements.</p>
+          <p class="en">Activates automatically above a configurable threshold (default 15 km/h). Anti-flutter hysteresis prevents false triggers.</p>
         </div>
         <div class="feature-card">
           <span class="feature-icon">🔵</span>
-          <h3>Car Bluetooth Trigger</h3>
-          <p>Starts blocking the moment your car's hands-free system connects. Supports any HFP / A2DP Bluetooth device or a specific pinned car.</p>
+          <h3 class="fr">Déclencheur Bluetooth</h3><h3 class="en">Car Bluetooth Trigger</h3>
+          <p class="fr">Démarre le blocage dès que le kit mains-libres de votre voiture se connecte. Supporte n'importe quel appareil HFP / A2DP ou un véhicule précis.</p>
+          <p class="en">Starts blocking the moment your car's hands-free system connects. Supports any HFP / A2DP device or a specific pinned car.</p>
         </div>
         <div class="feature-card">
           <span class="feature-icon">📵</span>
-          <h3>Screen Time Blocking</h3>
-          <p>Uses Apple's Family Controls API to block apps and entire categories (Social, Games, Entertainment…). Or total block mode for zero distraction.</p>
+          <h3 class="fr">Blocage Screen Time</h3><h3 class="en">Screen Time Blocking</h3>
+          <p class="fr">Utilise l'API Family Controls d'Apple pour bloquer des apps et catégories entières. Mode blocage total disponible.</p>
+          <p class="en">Uses Apple's Family Controls API to block apps and entire categories. Total block mode available.</p>
         </div>
         <div class="feature-card">
           <span class="feature-icon">🔴</span>
-          <h3>Full-screen Overlay</h3>
-          <p>A hard-to-ignore red alert covers the screen while driving, with a confirmation dialog to dismiss it.</p>
+          <h3 class="fr">Écran d'alerte</h3><h3 class="en">Full-screen Overlay</h3>
+          <p class="fr">Un avertissement rouge couvre l'écran pendant la conduite, avec une confirmation pour le masquer.</p>
+          <p class="en">A hard-to-ignore red alert covers the screen while driving, with a confirmation dialog to dismiss it.</p>
         </div>
         <div class="feature-card">
           <span class="feature-icon">🔔</span>
-          <h3>Local Notification</h3>
-          <p>Sends a notification when driving is detected — with "Open StopPhone" / "Keep blocking" action buttons.</p>
+          <h3 class="fr">Notification locale</h3><h3 class="en">Local Notification</h3>
+          <p class="fr">Envoie une notification quand une conduite est détectée — avec les boutons « Ouvrir StopPhone » / « Garder le blocage ».</p>
+          <p class="en">Sends a notification when driving is detected — with "Open StopPhone" / "Keep blocking" action buttons.</p>
         </div>
         <div class="feature-card">
           <span class="feature-icon">🔊</span>
-          <h3>Voice Alert</h3>
-          <p>Speaks an alert through your car speakers via Bluetooth audio, so you hear it even without looking at your phone.</p>
+          <h3 class="fr">Alerte vocale</h3><h3 class="en">Voice Alert</h3>
+          <p class="fr">Annonce l'alerte sur les enceintes de la voiture via Bluetooth audio — même sans regarder le téléphone.</p>
+          <p class="en">Speaks an alert through your car speakers via Bluetooth audio, so you hear it even without looking at your phone.</p>
         </div>
         <div class="feature-card">
           <span class="feature-icon">⚡</span>
-          <h3>Shortcuts Automation</h3>
-          <p>URL scheme <code>stopphone://activate</code> lets you build a Siri Shortcut that launches StopPhone automatically when your car Bluetooth connects.</p>
+          <h3 class="fr">Raccourcis Siri</h3><h3 class="en">Shortcuts Automation</h3>
+          <p class="fr">Le schéma URL <code>stopphone://activate</code> permet de créer une automation qui lance StopPhone dès la connexion Bluetooth.</p>
+          <p class="en">URL scheme <code>stopphone://activate</code> lets you build a Siri Shortcut that launches StopPhone automatically when your car Bluetooth connects.</p>
         </div>
         <div class="feature-card">
           <span class="feature-icon">🌍</span>
-          <h3>French & English</h3>
-          <p>Fully localised in French and English. The app detects your device language automatically.</p>
+          <h3 class="fr">Français &amp; Anglais</h3><h3 class="en">French &amp; English</h3>
+          <p class="fr">Interface entièrement localisée. L'app détecte automatiquement la langue de l'appareil.</p>
+          <p class="en">Fully localised in French and English. The app detects your device language automatically.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ── HOW IT WORKS ───────────────────────────────────────────── -->
+  <!-- ── HOW IT WORKS ── -->
   <section>
     <div class="container">
-      <div class="section-label">How it works</div>
-      <h2>Simple. Automatic. Reliable.</h2>
-      <p class="section-sub">No interaction needed while driving — StopPhone handles everything in the background.</p>
+      <div class="section-label fr">Comment ça marche</div>
+      <div class="section-label en">How it works</div>
+      <h2 class="fr">Simple. Automatique. Fiable.</h2>
+      <h2 class="en">Simple. Automatic. Reliable.</h2>
+      <p class="section-sub fr">Aucune interaction nécessaire pendant la conduite — StopPhone gère tout en arrière-plan.</p>
+      <p class="section-sub en">No interaction needed while driving — StopPhone handles everything in the background.</p>
 
       <div class="steps">
         <div class="step">
           <div class="step-num">1</div>
           <div class="step-content">
-            <h3>Enable protection once</h3>
-            <p>Flip the toggle on the dashboard. Grant location (Always) and Family Controls permissions. That's it.</p>
+            <h3 class="fr">Activez la protection une seule fois</h3>
+            <h3 class="en">Enable protection once</h3>
+            <p class="fr">Basculez le toggle sur le tableau de bord. Accordez les permissions Localisation (Toujours) et Family Controls. C'est tout.</p>
+            <p class="en">Flip the toggle on the dashboard. Grant location (Always) and Family Controls permissions. That's it.</p>
           </div>
         </div>
         <div class="step">
           <div class="step-num">2</div>
           <div class="step-content">
-            <h3>Get in your car</h3>
-            <p>As soon as your car Bluetooth connects <em>or</em> your GPS speed exceeds the threshold, StopPhone activates automatically — even if the app is closed.</p>
+            <h3 class="fr">Montez dans votre voiture</h3>
+            <h3 class="en">Get in your car</h3>
+            <p class="fr">Dès que le Bluetooth de votre voiture se connecte <em>ou</em> que votre vitesse dépasse le seuil, StopPhone s'active automatiquement — même si l'app est fermée.</p>
+            <p class="en">As soon as your car Bluetooth connects <em>or</em> your GPS speed exceeds the threshold, StopPhone activates automatically — even if the app is closed.</p>
           </div>
         </div>
         <div class="step">
           <div class="step-num">3</div>
           <div class="step-content">
-            <h3>Apps are blocked</h3>
-            <p>Selected apps are shielded by Screen Time. A full-screen red overlay appears. Your car speakers announce the alert. A notification is sent.</p>
+            <h3 class="fr">Les apps sont bloquées</h3>
+            <h3 class="en">Apps are blocked</h3>
+            <p class="fr">Les apps sélectionnées sont protégées par Screen Time. Un écran d'alerte rouge apparaît. Vos enceintes annoncent l'alerte. Une notification est envoyée.</p>
+            <p class="en">Selected apps are shielded by Screen Time. A full-screen red overlay appears. Your car speakers announce the alert. A notification is sent.</p>
           </div>
         </div>
         <div class="step">
           <div class="step-num">4</div>
           <div class="step-content">
-            <h3>Auto-disables when you stop</h3>
-            <p>When your speed drops below the threshold (with a 5 km/h hysteresis buffer) or your car Bluetooth disconnects, blocking is removed automatically.</p>
+            <h3 class="fr">Se désactive automatiquement à l'arrêt</h3>
+            <h3 class="en">Auto-disables when you stop</h3>
+            <p class="fr">Quand la vitesse repasse sous le seuil (tampon d'hystérésis de 5 km/h) ou que le Bluetooth se déconnecte, le blocage est automatiquement levé.</p>
+            <p class="en">When your speed drops below the threshold (with a 5 km/h hysteresis buffer) or your car Bluetooth disconnects, blocking is removed automatically.</p>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ── SHORTCUTS ──────────────────────────────────────────────── -->
+  <!-- ── SHORTCUTS ── -->
   <section style="background: var(--surface);">
     <div class="container">
       <div class="section-label">Shortcuts</div>
-      <h2>Full automation with Siri Shortcuts</h2>
-      <p class="section-sub">Use the URL scheme to trigger StopPhone from any automation, even when the app is closed.</p>
+      <h2 class="fr">Automatisation complète avec Raccourcis Siri</h2>
+      <h2 class="en">Full automation with Siri Shortcuts</h2>
+      <p class="section-sub fr">Utilisez le schéma URL pour déclencher StopPhone depuis n'importe quelle automation, même quand l'app est fermée.</p>
+      <p class="section-sub en">Use the URL scheme to trigger StopPhone from any automation, even when the app is closed.</p>
 
-      <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:32px;">
+      <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 32px;">
         <div class="url-pill">stopphone://activate</div>
         <div class="url-pill">stopphone://deactivate</div>
       </div>
@@ -515,93 +570,139 @@
       <div class="steps">
         <div class="step">
           <div class="step-num">1</div>
-          <div class="step-content"><h3>Open the Shortcuts app</h3><p></p></div>
+          <div class="step-content">
+            <h3 class="fr">Ouvrir l'app Raccourcis</h3>
+            <h3 class="en">Open the Shortcuts app</h3>
+          </div>
         </div>
         <div class="step">
           <div class="step-num">2</div>
-          <div class="step-content"><h3>Automation → + → Personal Automation</h3><p></p></div>
+          <div class="step-content">
+            <h3 class="fr">Automatisation → + → Automatisation personnelle</h3>
+            <h3 class="en">Automation → + → Personal Automation</h3>
+          </div>
         </div>
         <div class="step">
           <div class="step-num">3</div>
           <div class="step-content">
-            <h3>Choose Bluetooth → your car → Connects</h3>
-            <p></p>
+            <h3 class="fr">Choisir Bluetooth → votre voiture → Se connecte</h3>
+            <h3 class="en">Choose Bluetooth → your car → Connects</h3>
           </div>
         </div>
         <div class="step">
           <div class="step-num">4</div>
           <div class="step-content">
-            <h3>Add action "Open URLs" → <code>stopphone://activate</code></h3>
-            <p>Repeat with "Disconnects" → <code>stopphone://deactivate</code> for auto-disabling too.</p>
+            <h3 class="fr">Ajouter l'action « Ouvrir des URL » → <code>stopphone://activate</code></h3>
+            <h3 class="en">Add action "Open URLs" → <code>stopphone://activate</code></h3>
+            <p class="fr">Répétez avec « Se déconnecte » → <code>stopphone://deactivate</code> pour la désactivation automatique.</p>
+            <p class="en">Repeat with "Disconnects" → <code>stopphone://deactivate</code> for auto-disabling too.</p>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ── PRIVACY ────────────────────────────────────────────────── -->
+  <!-- ── PRIVACY ── -->
   <section>
     <div class="container">
-      <div class="section-label">Privacy</div>
-      <h2>Your data stays on your phone</h2>
-      <p class="section-sub">StopPhone is designed with privacy by default. Zero telemetry, zero accounts, zero servers.</p>
+      <div class="section-label fr">Confidentialité</div>
+      <div class="section-label en">Privacy</div>
+      <h2 class="fr">Vos données restent sur votre téléphone</h2>
+      <h2 class="en">Your data stays on your phone</h2>
+      <p class="section-sub fr">StopPhone est conçu avec la confidentialité par défaut. Zéro télémétrie, zéro compte, zéro serveur.</p>
+      <p class="section-sub en">StopPhone is designed with privacy by default. Zero telemetry, zero accounts, zero servers.</p>
 
       <div class="privacy-grid">
         <div class="privacy-card">
           <div class="icon">🚫</div>
-          <h3>No data collection</h3>
-          <p>GPS speed is processed in real-time and never stored or transmitted.</p>
+          <h3 class="fr">Aucune collecte</h3><h3 class="en">No data collection</h3>
+          <p class="fr">La vitesse GPS est traitée en temps réel, jamais stockée ni transmise.</p>
+          <p class="en">GPS speed is processed in real-time and never stored or transmitted.</p>
         </div>
         <div class="privacy-card">
           <div class="icon">👤</div>
-          <h3>No account required</h3>
-          <p>No sign-up, no login, no email. Just install and use.</p>
+          <h3 class="fr">Sans compte</h3><h3 class="en">No account required</h3>
+          <p class="fr">Aucune inscription, aucun email. Installez et utilisez.</p>
+          <p class="en">No sign-up, no login, no email. Just install and use.</p>
         </div>
         <div class="privacy-card">
           <div class="icon">🌐</div>
-          <h3>No network requests</h3>
-          <p>The app never contacts any server. Everything runs 100% offline.</p>
+          <h3 class="fr">Sans réseau</h3><h3 class="en">No network requests</h3>
+          <p class="fr">L'app ne contacte jamais aucun serveur. Tout fonctionne 100&nbsp;% hors ligne.</p>
+          <p class="en">The app never contacts any server. Everything runs 100% offline.</p>
         </div>
         <div class="privacy-card">
           <div class="icon">📖</div>
-          <h3>Open source</h3>
-          <p>The full source code is on GitHub. Audit it yourself anytime.</p>
+          <h3 class="fr">Open source</h3><h3 class="en">Open source</h3>
+          <p class="fr">Le code source complet est sur GitHub. Auditez-le à tout moment.</p>
+          <p class="en">The full source code is on GitHub. Audit it yourself anytime.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ── CTA ────────────────────────────────────────────────────── -->
+  <!-- ── CTA ── -->
   <section class="cta-section">
     <div class="container">
       <div class="section-label">Open source</div>
-      <h2>Build it yourself or contribute</h2>
+      <h2 class="fr">Compilez-le vous-même ou contribuez</h2>
+      <h2 class="en">Build it yourself or contribute</h2>
       <p class="section-sub" style="margin: 0 auto 36px;">
-        StopPhone is MIT-licensed and fully open source. Build it from Xcode, star the repo, or submit a pull request.
+        <span class="fr">StopPhone est sous licence MIT. Compilez depuis Xcode, mettez une étoile au repo ou soumettez une pull request.</span>
+        <span class="en">StopPhone is MIT-licensed. Build it from Xcode, star the repo, or submit a pull request.</span>
       </p>
       <div class="hero-cta">
         <a href="https://github.com/boboul-cloud/StopPhone" class="btn btn-primary">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
-          View on GitHub
+          <span class="fr">Voir sur GitHub</span><span class="en">View on GitHub</span>
         </a>
         <a href="https://github.com/boboul-cloud/StopPhone/issues" class="btn btn-secondary">
-          💬 Open an Issue
+          <span class="fr">💬 Signaler un problème</span><span class="en">💬 Open an Issue</span>
         </a>
       </div>
     </div>
   </section>
 
-  <!-- ── FOOTER ─────────────────────────────────────────────────── -->
+  <!-- ── FOOTER ── -->
   <footer>
     <p>
-      Made with ❤️ to keep roads safer &nbsp;·&nbsp;
-      <a href="https://github.com/boboul-cloud/StopPhone">GitHub</a> &nbsp;·&nbsp;
+      <span class="fr">Fait avec ❤️ pour des routes plus sûres</span>
+      <span class="en">Made with ❤️ to keep roads safer</span>
+      &nbsp;·&nbsp;
+      <a href="https://github.com/boboul-cloud/StopPhone">GitHub</a>
+      &nbsp;·&nbsp;
+      <a href="privacy.html"><span class="fr">Confidentialité</span><span class="en">Privacy</span></a>
+      &nbsp;·&nbsp;
+      <a href="terms.html"><span class="fr">CGU</span><span class="en">Terms</span></a>
+      &nbsp;·&nbsp;
       <a href="https://github.com/boboul-cloud/StopPhone/blob/main/LICENSE">MIT License</a>
     </p>
-    <p style="margin-top:8px; font-size:0.78rem; color:#555;">
-      StopPhone is not affiliated with Apple Inc.
+    <p style="margin-top: 8px; font-size: 0.78rem; color: #555;">
+      StopPhone <span class="fr">n'est pas affilié à Apple Inc.</span><span class="en">is not affiliated with Apple Inc.</span>
     </p>
   </footer>
+
+  <script>
+    function setLang(lang) {
+      if (lang === 'en') {
+        document.body.classList.add('en-mode');
+        document.documentElement.lang = 'en';
+        document.getElementById('btn-en').classList.add('active');
+        document.getElementById('btn-fr').classList.remove('active');
+        document.title = 'StopPhone \u2014 Drive Safe, Stay Focused';
+      } else {
+        document.body.classList.remove('en-mode');
+        document.documentElement.lang = 'fr';
+        document.getElementById('btn-fr').classList.add('active');
+        document.getElementById('btn-en').classList.remove('active');
+        document.title = 'StopPhone \u2014 Conduisez sans distraction';
+      }
+      localStorage.setItem('sp_lang', lang);
+    }
+    const saved = localStorage.getItem('sp_lang');
+    if (saved) { setLang(saved); }
+    else if (navigator.language && !navigator.language.startsWith('fr')) { setLang('en'); }
+  </script>
 
 </body>
 </html>
