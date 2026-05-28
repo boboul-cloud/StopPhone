@@ -229,11 +229,6 @@ struct SettingsView: View {
                         Label(String(localized: "about.website"), systemImage: "globe")
                     }
 
-                    // GitHub
-                    Link(destination: URL(string: "https://github.com/boboul-cloud/StopPhone")!) {
-                        Label(String(localized: "about.github"), systemImage: "chevron.left.forwardslash.chevron.right")
-                    }
-
                     // Privacy Policy
                     Link(destination: URL(string: "https://boboul-cloud.github.io/StopPhone/privacy.html")!) {
                         Label(String(localized: "about.privacy"), systemImage: "lock.shield")
