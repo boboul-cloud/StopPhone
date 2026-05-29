@@ -4,6 +4,7 @@
 /* Tabs */
 "tab.dashboard" = "Tableau de bord";
 "tab.settings" = "Réglages";
+"tab.trips" = "Trajets";
 
 /* Toggle */
 "status.enabled" = "Protection active";
@@ -23,6 +24,14 @@
 "block.notif" = "Notification";
 "block.notif.sub" = "Ouvre StopPhone automatiquement quand une conduite est détectée";
 
+/* Screen Time blocking rows */
+"block.screentime.all" = "Screen Time — Toutes les apps";
+"block.screentime.all.sub" = "Toutes les catégories bloquées via Screen Time";
+"block.screentime.custom" = "Screen Time — Sélection personnalisée";
+"block.screentime.custom.sub" = "%d app(s)/catégorie(s) bloquée(s)";
+"block.screentime.total" = "Verrouillage d'urgence — Tout bloqué";
+"block.screentime.total.sub" = "Toutes les apps et sites bloqués (mode total actif)";
+
 /* Overlay */
 "overlay.title" = "Posez le téléphone !";
 "overlay.subtitle" = "Vous conduisez. Restez concentré sur la route.";
@@ -39,19 +48,28 @@
 "calls.body" = "iOS ne permet pas de bloquer les appels entrants. Activez le mode Focus « Conduite » pour limiter les interruptions.";
 "calls.focus.button" = "Ouvrir les Réglages →";
 
-/* Permissions */
-/* Location */
+/* Location & loading */
 "location.denied.title" = "Localisation refusée";
 "location.denied.body" = "Autorisez l'accès à la localisation dans Réglages.";
+"loading.title" = "Initialisation…";
+
+/* Permissions */
+"permission.title" = "Autoriser Screen Time";
+"permission.body" = "Requis pour bloquer les apps via Screen Time";
 
 /* Settings */
 "settings.title" = "Réglages";
 "settings.section.detection" = "Détection";
 "settings.section.detection.footer" = "La vitesse est mesurée via le GPS. Ajustez le seuil avec le curseur.";
 "settings.speed" = "Seuil de vitesse";
-"settings.section.blocking" = "Alertes activées";
+"settings.section.blocking" = "Apps à bloquer";
 "settings.section.footer" = "Sans l'entitlement Apple « Family Controls », seul l'écran d'alerte est disponible.";
+"settings.section.footer.default" = "Par défaut, toutes les catégories d'apps sont bloquées via Screen Time pendant la conduite.";
+"settings.section.footer.custom" = "Seules les apps et catégories sélectionnées sont bloquées.";
 "settings.section.permissions" = "Autorisations";
+"settings.choose.apps" = "Choisir les apps à bloquer";
+"settings.default" = "Toutes (défaut)";
+"settings.reset" = "Réinitialiser la sélection";
 
 /* Bluetooth véhicule */
 "settings.section.bluetooth" = "Bluetooth véhicule";
@@ -69,7 +87,7 @@
 "shortcuts.step1" = "Ouvrir l'app Raccourcis";
 "shortcuts.step2" = "Aller dans Automatisation → + → Automatisation personnelle";
 "shortcuts.step3" = "Choisir \"Bluetooth\" → sélectionner votre voiture → \"Se connecte\"";
-"shortcuts.step4" = "Ajouter l'action \"Ouvrir des URL\" → saisir : stopphone://activate";
+"shortcuts.step4" = "Ajouter l'action \"Ouvrir des URL\" → saisir : stopphone://activate";
 "shortcuts.open" = "Ouvrir Raccourcis";
 
 /* À propos */
@@ -88,7 +106,7 @@
 "notif.action.open" = "Oui, ouvrir StopPhone";
 "notif.action.ignore" = "Non, garder le blocage";
 
-/* Alerte vocale (AVSpeechSynthesizer) */
+/* Alerte vocale */
 "speech.driving.alert" = "Conduite détectée. StopPhone vous protège.";
 
 /* Mode démo */
@@ -96,6 +114,7 @@
 "demo.subtitle" = "Simule un véhicule en route sans avoir à prendre la voiture.";
 "demo.start" = "Simuler un trajet à %d km/h";
 "demo.stop" = "Arrêter la simulation";
+"demo.badge" = "DEMO";
 
 /* Blocage total */
 "settings.section.total.block" = "Verrouillage d'urgence";
@@ -103,59 +122,46 @@
 "settings.total.block.footer.on" = "Toutes les apps et sites sont bloqués dès que la conduite est détectée.";
 "settings.total.block.footer.off" = "Seules les apps sélectionnées sont bloquées. Activez cette option pour tout bloquer.";
 
+/* Voix */
+"settings.section.voice" = "Alerte vocale";
+"settings.voice.toggle" = "Annonce vocale en début de blocage";
+"settings.voice.footer" = "La voix se diffuse automatiquement vers les haut-parleurs du véhicule via Bluetooth.";
 
-/* Tabs */
-"tab.dashboard" = "Tableau de bord";
-"tab.settings" = "Réglages";
+/* Mode passager */
+"settings.section.passenger" = "Mode passager";
+"settings.passenger.enable" = "Suspendre 15 min";
+"settings.passenger.active" = "Actif jusqu'à %@";
+"settings.passenger.cancel" = "Annuler la suspension";
+"settings.passenger.footer" = "Désactive temporairement le blocage si vous êtes passager. Réactivation automatique après 15 minutes.";
+"passenger.banner" = "🧍 Mode passager actif — %@ restant";
 
-/* Toggle */
-"status.enabled" = "Protection active";
-"status.disabled" = "Protection désactivée";
-"toggle.subtitle" = "Bloque les apps au-delà de 15 km/h";
+/* Auto-désactivation */
+"settings.section.autodisable" = "Auto-désactivation";
+"settings.autodisable.label" = "Désactiver après inactivité";
+"settings.autodisable.off" = "Jamais";
+"settings.autodisable.minutes" = "%d min";
+"settings.autodisable.footer" = "StopPhone se désactive automatiquement si aucun mouvement n'est détecté pendant la durée choisie.";
 
-/* Speed */
-"threshold.label" = "Seuil : %d km/h";
-"speed.above" = "🚨 Blocage actif";
-"speed.below" = "Vitesse normale";
+/* PIN parental */
+"settings.section.pin" = "Code parental";
+"settings.pin.set" = "Définir un code à 4 chiffres";
+"settings.pin.change" = "Modifier le code";
+"settings.pin.remove" = "Supprimer le code";
+"settings.pin.footer" = "Un code parental empêche la désactivation de la protection sans l'avoir saisi.";
+"pin.prompt.title" = "Code parental requis";
+"pin.prompt.body" = "Saisissez le code à 4 chiffres pour désactiver la protection.";
+"pin.setup.enter" = "Choisissez un code à 4 chiffres";
+"pin.setup.confirm" = "Confirmez le code";
+"pin.setup.mismatch" = "Les codes ne correspondent pas";
 
-/* Blocking */
-"blocking.active" = "Blocage en cours";
-"blocking.inactive" = "Aucun blocage";
-"block.social" = "Réseaux sociaux";
-"block.entertainment" = "Divertissement";
-"block.web" = "Web (réseaux sociaux)";
-
-/* Calls */
-"calls.title" = "Appels téléphoniques";
-"calls.body" = "iOS ne permet pas de bloquer les appels entrants depuis une app tierce. Activez le mode Focus « Conduite » dans Réglages pour limiter les interruptions.";
-"calls.focus.button" = "Ouvrir les Réglages →";
-
-/* Permissions */
-"permission.title" = "Autoriser le blocage d'apps";
-"permission.body" = "Requis pour bloquer les réseaux sociaux via Screen Time";
-
-/* Location */
-"location.denied.title" = "Localisation refusée";
-"location.denied.body" = "Autorisez l'accès à la localisation dans Réglages pour détecter votre vitesse.";
-
-/* Settings */
-"settings.title" = "Réglages";
-"settings.section.blocking" = "Apps à bloquer";
-"settings.section.footer" = "Sélectionnez les apps et catégories à bloquer automatiquement quand votre vitesse dépasse 15 km/h. Par défaut, toutes les catégories sont bloquées.";
-"settings.choose.apps" = "Choisir les apps à bloquer";
-"settings.default" = "Toutes (défaut)";
-"settings.reset" = "Réinitialiser la sélection";
-
-/* Screen Time blocking rows */
-"block.screentime.all" = "Screen Time — Toutes les apps";
-"block.screentime.all.sub" = "Toutes les catégories bloquées via Screen Time";
-"block.screentime.custom" = "Screen Time — Sélection personnalisée";
-"block.screentime.custom.sub" = "%d app(s)/catégorie(s) bloquée(s)";
-"block.screentime.total" = "Verrouillage d'urgence — Tout bloqué";
-"block.screentime.total.sub" = "Toutes les apps et sites bloqués (mode total actif)";
-
-/* Settings extra */
-"settings.section.alerts" = "Alertes";
-"settings.section.footer.default" = "Par défaut, toutes les catégories d'apps sont bloquées via Screen Time quand vous dépassez 15 km/h.";
-"settings.section.footer.custom" = "Seules les apps et catégories sélectionnées sont bloquées.";
-"permission.title" = "Autoriser Screen Time";
+/* Trips */
+"trips.title" = "Historique des trajets";
+"trips.empty.title" = "Aucun trajet enregistré";
+"trips.empty.body" = "Vos trajets détectés apparaîtront ici, avec la durée et la vitesse maximale.";
+"trips.stats.header" = "Statistiques";
+"trips.stats.count" = "Nombre de trajets";
+"trips.stats.duration" = "Durée totale";
+"trips.stats.maxspeed" = "Vitesse max enregistrée";
+"trips.history.header" = "Historique";
+"trips.clear.confirm" = "Supprimer tout l'historique ?";
+"trips.clear.yes" = "Tout supprimer";

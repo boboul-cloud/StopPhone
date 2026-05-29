@@ -8,8 +8,9 @@ import UserNotifications
 /// Manages driving protection:
 ///  1. Screen Time blocking via FamilyControls + ManagedSettings
 ///  2. Fullscreen overlay in-app (handled by ContentView)
-///  3. Local notification
+///  3. Local notification (debounced)
 ///  4. Voice alert via AVSpeechSynthesizer (plays through car Bluetooth)
+///  5. Passenger mode (temporary snooze) + trip history recording
 @MainActor
 final class BlockingManager: ObservableObject {
 
@@ -17,30 +18,67 @@ final class BlockingManager: ObservableObject {
     @Published var isBlocking: Bool = false
     @Published var authorizationError: String?
     @Published var totalBlockMode: Bool {
-        didSet { UserDefaults.standard.set(totalBlockMode, forKey: "stopphone_total_block") }
+        didSet { UserDefaults.standard.set(totalBlockMode, forKey: UDKey.totalBlock) }
     }
+    @Published var voiceAlertEnabled: Bool {
+        didSet { UserDefaults.standard.set(voiceAlertEnabled, forKey: UDKey.voiceAlertEnabled) }
+    }
+    /// Epoch incremented every time blocking is (re)applied — drives overlay reappearance.
     @Published var blockingEpoch: Int = 0
     @Published var activitySelection: FamilyActivitySelection = FamilyActivitySelection() {
         didSet { persistSelection() }
     }
+    /// Passenger snooze: blocking is bypassed until this date (nil = no snooze).
+    @Published var passengerSnoozeUntil: Date? {
+        didSet {
+            if let d = passengerSnoozeUntil {
+                UserDefaults.standard.set(d.timeIntervalSince1970, forKey: UDKey.passengerUntil)
+            } else {
+                UserDefaults.standard.removeObject(forKey: UDKey.passengerUntil)
+            }
+        }
+    }
 
     private let store = ManagedSettingsStore()
-    private static let selectionKey = "stopphone_blocking_selection"
     private var cancellables = Set<AnyCancellable>()
     private let speechSynthesizer = AVSpeechSynthesizer()
+    private var lastNotificationDate: Date?
+    private var snoozeTimer: Timer?
+
+    // Trip recording — assigned by the App after init.
+    weak var tripStore: TripStore?
 
     init() {
-        totalBlockMode = UserDefaults.standard.bool(forKey: "stopphone_total_block")
-        isAuthorized = AuthorizationCenter.shared.authorizationStatus == .approved
+        totalBlockMode    = UserDefaults.standard.bool(forKey: UDKey.totalBlock)
+        voiceAlertEnabled = UserDefaults.standard.object(forKey: UDKey.voiceAlertEnabled) as? Bool ?? true
+        isAuthorized      = AuthorizationCenter.shared.authorizationStatus == .approved
         loadSelection()
-        // Restore blocking state from UserDefaults first (survives cold launch even if
-        // authorization status isn't immediately available or only .applications was set).
-        // Cross-check with ManagedSettingsStore to auto-correct if settings were cleared externally.
-        let savedBlocking = UserDefaults.standard.bool(forKey: "stopphone_is_blocking")
+        // Restore passenger snooze (drop if expired)
+        let ts = UserDefaults.standard.double(forKey: UDKey.passengerUntil)
+        if ts > 0 {
+            let d = Date(timeIntervalSince1970: ts)
+            if d > Date() {
+                passengerSnoozeUntil = d
+                scheduleSnoozeExpiry(at: d)
+            } else {
+                UserDefaults.standard.removeObject(forKey: UDKey.passengerUntil)
+            }
+        }
+        // Restore last blocking state.
+        let savedBlocking = UserDefaults.standard.bool(forKey: UDKey.isBlocking)
         let storeHasSettings = store.shield.applicationCategories != nil
                             || store.shield.webDomainCategories != nil
                             || store.shield.applications != nil
         isBlocking = savedBlocking || storeHasSettings
+        // Stale-cleanup: persisted flag without real settings => desync, drop it.
+        if isBlocking && !storeHasSettings {
+            isBlocking = false
+            UserDefaults.standard.set(false, forKey: UDKey.isBlocking)
+        }
+
+        // One-time AVAudioSession setup (was previously re-applied on each blocking).
+        let session = AVAudioSession.sharedInstance()
+        try? session.setCategory(.playback, options: [.duckOthers])
     }
 
     // MARK: - Authorization
@@ -54,24 +92,21 @@ final class BlockingManager: ObservableObject {
             isAuthorized = false
             authorizationError = error.localizedDescription
         }
-        // Request notification permission alongside Family Controls
         _ = try? await UNUserNotificationCenter.current()
             .requestAuthorization(options: [.alert, .sound, .badge])
         registerNotificationCategory()
     }
 
-    /// Registers the interactive notification category with Open / Ignore action buttons.
-    /// Must be called once before any notification is delivered.
     private func registerNotificationCategory() {
         let openAction = UNNotificationAction(
             identifier: "STOPPHONE_OPEN",
             title: String(localized: "notif.action.open"),
-            options: .foreground          // .foreground opens the app automatically
+            options: .foreground
         )
         let ignoreAction = UNNotificationAction(
             identifier: "STOPPHONE_IGNORE",
             title: String(localized: "notif.action.ignore"),
-            options: [.destructive]       // red label, no foreground — blocking stays active
+            options: [.destructive]
         )
         let category = UNNotificationCategory(
             identifier: "STOPPHONE_DRIVING",
@@ -81,16 +116,45 @@ final class BlockingManager: ObservableObject {
         UNUserNotificationCenter.current().setNotificationCategories([category])
     }
 
+    // MARK: - Passenger mode
+
+    func enablePassengerMode(duration: TimeInterval = AppConstants.passengerSnoozeDuration) {
+        let end = Date().addingTimeInterval(duration)
+        passengerSnoozeUntil = end
+        scheduleSnoozeExpiry(at: end)
+        if isBlocking { removeBlocking(recordTrip: false) }
+    }
+
+    func cancelPassengerMode() {
+        snoozeTimer?.invalidate()
+        snoozeTimer = nil
+        passengerSnoozeUntil = nil
+    }
+
+    var isPassengerActive: Bool {
+        if let d = passengerSnoozeUntil { return d > Date() }
+        return false
+    }
+
+    private func scheduleSnoozeExpiry(at date: Date) {
+        snoozeTimer?.invalidate()
+        let interval = max(date.timeIntervalSinceNow, 0)
+        snoozeTimer = Timer.scheduledTimer(withTimeInterval: interval, repeats: false) { [weak self] _ in
+            Task { @MainActor in self?.passengerSnoozeUntil = nil }
+        }
+    }
+
     // MARK: - Blocking
 
-    func applyBlocking() {
+    func applyBlocking(trigger: Trip.Trigger = .speed) {
+        if isPassengerActive { return }
         guard !isBlocking else { return }
-        // Show overlay immediately before applying Screen Time restrictions
         blockingEpoch += 1
         isBlocking = true
-        UserDefaults.standard.set(true, forKey: "stopphone_is_blocking")
+        UserDefaults.standard.set(true, forKey: UDKey.isBlocking)
+        tripStore?.beginTrip(trigger: trigger)
         sendDrivingNotification()
-        speakDrivingAlert()
+        if voiceAlertEnabled { speakDrivingAlert() }
         guard isAuthorized else { return }
         if totalBlockMode {
             store.shield.applicationCategories = .all(except: [])
@@ -114,30 +178,38 @@ final class BlockingManager: ObservableObject {
         }
     }
 
-    func removeBlocking() {
-        // Always clear the ManagedSettingsStore to handle state desync
-        // (e.g. app restarted after a trip, or user force-quit while blocking was active)
+    func removeBlocking(recordTrip: Bool = true) {
         if isAuthorized { store.clearAllSettings() }
         isBlocking = false
-        UserDefaults.standard.set(false, forKey: "stopphone_is_blocking")
+        UserDefaults.standard.set(false, forKey: UDKey.isBlocking)
         cancelDrivingNotification()
+        if recordTrip { tripStore?.endTrip() }
+    }
+
+    /// Called by SpeedMonitor on each GPS update so the open trip records max/avg.
+    func sampleSpeed(_ kmh: Double) {
+        guard isBlocking else { return }
+        tripStore?.record(speed: kmh)
     }
 
     // MARK: - Notifications
 
-    /// Sends an immediate time-sensitive notification so the user can tap and open the overlay.
-    /// iOS prevents apps from foregrounding themselves; this is the closest to automatic possible.
     private func sendDrivingNotification() {
+        if let last = lastNotificationDate,
+           Date().timeIntervalSince(last) < AppConstants.notificationCooldown {
+            return
+        }
+        lastNotificationDate = Date()
         let content = UNMutableNotificationContent()
         content.title = String(localized: "notif.driving.title")
         content.body = String(localized: "notif.driving.body")
         content.sound = .default
         content.interruptionLevel = .timeSensitive
-        content.categoryIdentifier = "STOPPHONE_DRIVING"   // attaches Open / Ignore buttons
+        content.categoryIdentifier = "STOPPHONE_DRIVING"
         let request = UNNotificationRequest(
             identifier: "stopphone.driving",
             content: content,
-            trigger: nil          // deliver immediately
+            trigger: nil
         )
         UNUserNotificationCenter.current().add(request)
     }
@@ -148,19 +220,11 @@ final class BlockingManager: ObservableObject {
         center.removePendingNotificationRequests(withIdentifiers: ["stopphone.driving"])
     }
 
-    /// Speaks the driving alert aloud — routes through car Bluetooth speakers automatically
-    /// when a hands-free / A2DP device is connected.
     private func speakDrivingAlert() {
-        // Set audio session to playback so it works in background and routes to car speakers.
-        // .duckOthers lowers music volume while speaking.
-        let session = AVAudioSession.sharedInstance()
-        try? session.setCategory(.playback, options: [.duckOthers])
-        try? session.setActive(true)
-
+        try? AVAudioSession.sharedInstance().setActive(true)
         let text = String(localized: "speech.driving.alert")
         let langCode = Locale.current.language.languageCode?.identifier ?? "en"
         let voiceLang = langCode == "fr" ? "fr-FR" : "en-US"
-
         let utterance = AVSpeechUtterance(string: text)
         utterance.voice = AVSpeechSynthesisVoice(language: voiceLang)
         utterance.rate = AVSpeechUtteranceDefaultSpeechRate
@@ -168,14 +232,10 @@ final class BlockingManager: ObservableObject {
         speechSynthesizer.speak(utterance)
     }
 
-    // MARK: - Background-safe Combine observers
+    // MARK: - Combine observers
 
-    /// Wire speed & Bluetooth signals into blocking decisions via Combine.
-    /// Unlike SwiftUI .onChange, these subscriptions fire even when the app is
-    /// backgrounded (as long as location background mode keeps the process alive).
     func observeMonitors(speed: SpeedMonitor, bluetooth: BluetoothMonitor) {
         cancellables.removeAll()
-
         Publishers.CombineLatest(
             Publishers.CombineLatest3(
                 speed.$isAboveThreshold,
@@ -186,11 +246,17 @@ final class BlockingManager: ObservableObject {
         )
         .sink { [weak self] combined, btEnabled in
             let (isAbove, isEnabled, btConnected) = combined
-            let shouldBlock = (btEnabled && btConnected) || (isAbove && isEnabled)
+            let speedTriggered = isAbove && isEnabled
+            let btTriggered    = btEnabled && btConnected
+            let shouldBlock    = speedTriggered || btTriggered
             Task { @MainActor [weak self] in
                 guard let self else { return }
                 if shouldBlock {
-                    self.applyBlocking()
+                    let t: Trip.Trigger
+                    if speedTriggered && speed.isDemoMode { t = .demo }
+                    else if speedTriggered { t = .speed }
+                    else { t = .bluetooth }
+                    self.applyBlocking(trigger: t)
                 } else {
                     self.removeBlocking()
                 }
@@ -202,12 +268,16 @@ final class BlockingManager: ObservableObject {
     // MARK: - Persistence
 
     private func persistSelection() {
-        guard let data = try? JSONEncoder().encode(activitySelection) else { return }
-        UserDefaults.standard.set(data, forKey: Self.selectionKey)
+        do {
+            let data = try JSONEncoder().encode(activitySelection)
+            UserDefaults.standard.set(data, forKey: UDKey.blockingSelection)
+        } catch {
+            print("[StopPhone] Failed to encode activity selection: \(error)")
+        }
     }
 
     private func loadSelection() {
-        guard let data = UserDefaults.standard.data(forKey: Self.selectionKey),
+        guard let data = UserDefaults.standard.data(forKey: UDKey.blockingSelection),
               let decoded = try? JSONDecoder().decode(FamilyActivitySelection.self, from: data)
         else { return }
         activitySelection = decoded

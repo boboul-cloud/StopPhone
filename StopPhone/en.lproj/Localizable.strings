@@ -4,6 +4,7 @@
 /* Tabs */
 "tab.dashboard" = "Dashboard";
 "tab.settings" = "Settings";
+"tab.trips" = "Trips";
 
 /* Toggle */
 "status.enabled" = "Protection on";
@@ -23,6 +24,14 @@
 "block.notif" = "Notification";
 "block.notif.sub" = "Opens StopPhone automatically when driving is detected";
 
+/* Screen Time blocking rows */
+"block.screentime.all" = "Screen Time — All apps";
+"block.screentime.all.sub" = "All categories blocked via Screen Time";
+"block.screentime.custom" = "Screen Time — Custom selection";
+"block.screentime.custom.sub" = "%d app(s)/category(ies) blocked";
+"block.screentime.total" = "Emergency lock — All apps";
+"block.screentime.total.sub" = "All apps and websites blocked (total lock active)";
+
 /* Overlay */
 "overlay.title" = "Put the phone down!";
 "overlay.subtitle" = "You're driving. Stay focused on the road.";
@@ -39,21 +48,30 @@
 "calls.body" = "iOS does not allow blocking incoming calls. Enable Focus \"Driving\" mode to reduce interruptions.";
 "calls.focus.button" = "Open Settings →";
 
-/* Permissions */
-/* Location */
+/* Location & loading */
 "location.denied.title" = "Location denied";
 "location.denied.body" = "Allow location access in Settings.";
+"loading.title" = "Initializing…";
+
+/* Permissions */
+"permission.title" = "Allow Screen Time";
+"permission.body" = "Required to block apps via Screen Time";
 
 /* Settings */
 "settings.title" = "Settings";
 "settings.section.detection" = "Detection";
 "settings.section.detection.footer" = "Speed is measured via GPS. Adjust the threshold with the slider.";
 "settings.speed" = "Speed threshold";
-"settings.section.blocking" = "Active alerts";
+"settings.section.blocking" = "Apps to block";
 "settings.section.footer" = "Without Apple's Family Controls entitlement, only the alert screen is available.";
+"settings.section.footer.default" = "By default, all app categories are blocked via Screen Time while driving.";
+"settings.section.footer.custom" = "Only the selected apps and categories are blocked.";
 "settings.section.permissions" = "Permissions";
+"settings.choose.apps" = "Choose apps to block";
+"settings.default" = "All (default)";
+"settings.reset" = "Reset selection";
 
-/* Bluetooth vehicle trigger */
+/* Vehicle Bluetooth */
 "settings.section.bluetooth" = "Vehicle Bluetooth";
 "settings.bluetooth.trigger" = "Activate when car connects";
 "settings.bluetooth.device.any" = "Any Bluetooth device";
@@ -88,7 +106,7 @@
 "notif.action.open" = "Yes, open StopPhone";
 "notif.action.ignore" = "No, keep blocking";
 
-/* Voice alert (AVSpeechSynthesizer) */
+/* Voice alert */
 "speech.driving.alert" = "Driving detected. StopPhone is protecting you.";
 
 /* Demo mode */
@@ -96,6 +114,7 @@
 "demo.subtitle" = "Simulates a vehicle at speed without taking your car.";
 "demo.start" = "Simulate driving at %d km/h";
 "demo.stop" = "Stop simulation";
+"demo.badge" = "DEMO";
 
 /* Total block */
 "settings.section.total.block" = "Emergency lock";
@@ -103,59 +122,46 @@
 "settings.total.block.footer.on" = "All apps and websites are blocked when driving is detected.";
 "settings.total.block.footer.off" = "Only the selected apps are blocked. Enable this to block everything.";
 
+/* Voice */
+"settings.section.voice" = "Voice alert";
+"settings.voice.toggle" = "Spoken announcement when blocking starts";
+"settings.voice.footer" = "The voice plays automatically through the car speakers via Bluetooth.";
 
-/* Tabs */
-"tab.dashboard" = "Dashboard";
-"tab.settings" = "Settings";
+/* Passenger mode */
+"settings.section.passenger" = "Passenger mode";
+"settings.passenger.enable" = "Snooze for 15 min";
+"settings.passenger.active" = "Active until %@";
+"settings.passenger.cancel" = "Cancel snooze";
+"settings.passenger.footer" = "Temporarily disables blocking when you're a passenger. Auto-reactivates after 15 minutes.";
+"passenger.banner" = "🧍 Passenger mode active — %@ remaining";
 
-/* Toggle */
-"status.enabled" = "Protection on";
-"status.disabled" = "Protection off";
-"toggle.subtitle" = "Blocks apps above 15 km/h";
+/* Auto-disable */
+"settings.section.autodisable" = "Auto-disable";
+"settings.autodisable.label" = "Disable after inactivity";
+"settings.autodisable.off" = "Never";
+"settings.autodisable.minutes" = "%d min";
+"settings.autodisable.footer" = "StopPhone automatically turns off if no movement is detected for the chosen duration.";
 
-/* Speed */
-"threshold.label" = "Threshold: %d km/h";
-"speed.above" = "🚨 Blocking active";
-"speed.below" = "Normal speed";
+/* Parental PIN */
+"settings.section.pin" = "Parental PIN";
+"settings.pin.set" = "Set a 4-digit PIN";
+"settings.pin.change" = "Change PIN";
+"settings.pin.remove" = "Remove PIN";
+"settings.pin.footer" = "A parental PIN prevents disabling protection without entering it.";
+"pin.prompt.title" = "Parental PIN required";
+"pin.prompt.body" = "Enter the 4-digit PIN to disable protection.";
+"pin.setup.enter" = "Choose a 4-digit PIN";
+"pin.setup.confirm" = "Confirm the PIN";
+"pin.setup.mismatch" = "PINs do not match";
 
-/* Blocking */
-"blocking.active" = "Blocking in progress";
-"blocking.inactive" = "No blocking";
-"block.social" = "Social networks";
-"block.entertainment" = "Entertainment";
-"block.web" = "Web (social networks)";
-
-/* Calls */
-"calls.title" = "Phone calls";
-"calls.body" = "iOS does not allow third-party apps to block incoming calls. Enable the Focus \"Driving\" mode in Settings to reduce interruptions.";
-"calls.focus.button" = "Open Settings →";
-
-/* Permissions */
-"permission.title" = "Allow app blocking";
-"permission.body" = "Required to block social apps via Screen Time";
-
-/* Location */
-"location.denied.title" = "Location denied";
-"location.denied.body" = "Allow location access in Settings to detect your speed.";
-
-/* Settings */
-"settings.title" = "Settings";
-"settings.section.blocking" = "Apps to block";
-"settings.section.footer" = "Select the apps and categories to block automatically when your speed exceeds 15 km/h. By default, all categories are blocked.";
-"settings.choose.apps" = "Choose apps to block";
-"settings.default" = "All (default)";
-"settings.reset" = "Reset selection";
-
-/* Screen Time blocking rows */
-"block.screentime.all" = "Screen Time — All apps";
-"block.screentime.all.sub" = "All categories blocked via Screen Time";
-"block.screentime.custom" = "Screen Time — Custom selection";
-"block.screentime.custom.sub" = "%d app(s)/category(ies) blocked";
-"block.screentime.total" = "Emergency lock — All apps";
-"block.screentime.total.sub" = "All apps and websites blocked (total lock active)";
-
-/* Settings extra */
-"settings.section.alerts" = "Alerts";
-"settings.section.footer.default" = "By default, all app categories are blocked via Screen Time when you exceed 15 km/h.";
-"settings.section.footer.custom" = "Only the selected apps and categories are blocked.";
-"permission.title" = "Allow Screen Time";
+/* Trips */
+"trips.title" = "Trip history";
+"trips.empty.title" = "No trips recorded";
+"trips.empty.body" = "Your detected trips will appear here, with duration and maximum speed.";
+"trips.stats.header" = "Statistics";
+"trips.stats.count" = "Number of trips";
+"trips.stats.duration" = "Total duration";
+"trips.stats.maxspeed" = "All-time max speed";
+"trips.history.header" = "History";
+"trips.clear.confirm" = "Delete all history?";
+"trips.clear.yes" = "Delete all";

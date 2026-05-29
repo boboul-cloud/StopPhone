@@ -8,6 +8,11 @@ struct SettingsView: View {
     @EnvironmentObject private var bluetoothMonitor: BluetoothMonitor
     @State private var showPicker = false
 
+    @AppStorage(UDKey.parentPIN) private var savedPIN: String = ""
+    @State private var showPINSetup = false
+    @State private var showPINPromptForChange = false
+    @State private var showPINPromptForRemove = false
+
     var body: some View {
         NavigationStack {
             List {
@@ -175,19 +180,188 @@ struct SettingsView: View {
                          : String(localized: "settings.section.footer.custom"))
                 }
 
-                // MARK: Alerts info
-                Section {
-                    InfoRow(icon: "📵",
-                            title: String(localized: "block.overlay"),
-                            detail: String(localized: "block.overlay.sub"))
-                } header: {
-                    Text(String(localized: "settings.section.alerts"))
-                }
-
                 if let err = blockingManager.authorizationError {
                     Section {
                         Text(err).font(.caption).foregroundStyle(.red)
                     }
+                }
+
+                // MARK: Calls warning
+                Section {
+                    HStack(alignment: .top, spacing: 12) {
+                        Text("⚠️")
+                            .font(.title2)
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(String(localized: "calls.title"))
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundStyle(.orange)
+                            Text(String(localized: "calls.body"))
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                            Button(String(localized: "calls.focus.button")) {
+                                if let url = URL(string: UIApplication.openSettingsURLString) {
+                                    UIApplication.shared.open(url)
+                                }
+                            }
+                            .font(.caption.weight(.medium))
+                            .foregroundStyle(.orange)
+                            .padding(.top, 2)
+                        }
+                    }
+                    .padding(.vertical, 4)
+                } header: {
+                    Text(String(localized: "calls.title"))
+                }
+
+                // MARK: Demo
+                Section {
+                    HStack(spacing: 8) {
+                        Text("🧪")
+                            .font(.title2)
+                        VStack(alignment: .leading, spacing: 2) {
+                            HStack(spacing: 6) {
+                                Text(String(localized: "demo.title"))
+                                    .font(.subheadline.weight(.semibold))
+                                Text("DEMO")
+                                    .font(.system(size: 10, weight: .bold))
+                                    .foregroundStyle(.white)
+                                    .padding(.horizontal, 6)
+                                    .padding(.vertical, 2)
+                                    .background(Color.orange)
+                                    .clipShape(Capsule())
+                            }
+                            Text(String(localized: "demo.subtitle"))
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                        Spacer()
+                    }
+                    .padding(.vertical, 2)
+
+                    Button {
+                        if speedMonitor.isDemoMode {
+                            speedMonitor.stopDemo()
+                        } else {
+                            speedMonitor.startDemo()
+                        }
+                    } label: {
+                        HStack(spacing: 8) {
+                            Image(systemName: speedMonitor.isDemoMode ? "stop.fill" : "play.fill")
+                            Text(speedMonitor.isDemoMode
+                                 ? String(localized: "demo.stop")
+                                 : String(format: String(localized: "demo.start"), Int(speedMonitor.demoSpeedKmh)))
+                        }
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 10)
+                        .background(speedMonitor.isDemoMode ? Color.red : Color.orange)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                    }
+                    .buttonStyle(.plain)
+                } header: {
+                    Text("Demo")
+                }
+
+                // MARK: Voice alert
+                Section {
+                    Toggle(isOn: $blockingManager.voiceAlertEnabled) {
+                        Label(String(localized: "settings.voice.toggle"),
+                              systemImage: "speaker.wave.2.fill")
+                    }
+                    .tint(.purple)
+                } header: {
+                    Text(String(localized: "settings.section.voice"))
+                } footer: {
+                    Text(String(localized: "settings.voice.footer"))
+                }
+
+                // MARK: Passenger mode
+                Section {
+                    if blockingManager.isPassengerActive,
+                       let until = blockingManager.passengerSnoozeUntil {
+                        HStack {
+                            Label(
+                                String(format: String(localized: "settings.passenger.active"),
+                                       until.formatted(date: .omitted, time: .shortened)),
+                                systemImage: "person.fill"
+                            )
+                            .foregroundStyle(.blue)
+                            Spacer()
+                        }
+                        Button(role: .destructive) {
+                            blockingManager.cancelPassengerMode()
+                        } label: {
+                            Label(String(localized: "settings.passenger.cancel"),
+                                  systemImage: "xmark.circle")
+                        }
+                    } else {
+                        Button {
+                            blockingManager.enablePassengerMode()
+                        } label: {
+                            Label(String(localized: "settings.passenger.enable"),
+                                  systemImage: "person.crop.circle.badge.checkmark")
+                                .foregroundStyle(.blue)
+                        }
+                    }
+                } header: {
+                    Text(String(localized: "settings.section.passenger"))
+                } footer: {
+                    Text(String(localized: "settings.passenger.footer"))
+                }
+
+                // MARK: Auto-disable
+                Section {
+                    Picker(
+                        selection: $speedMonitor.autoDisableMinutes
+                    ) {
+                        ForEach(AppConstants.autoDisableOptions, id: \.self) { value in
+                            if value == 0 {
+                                Text(String(localized: "settings.autodisable.off")).tag(0)
+                            } else {
+                                Text(String(format: String(localized: "settings.autodisable.minutes"), value))
+                                    .tag(value)
+                            }
+                        }
+                    } label: {
+                        Label(String(localized: "settings.autodisable.label"),
+                              systemImage: "timer")
+                    }
+                } header: {
+                    Text(String(localized: "settings.section.autodisable"))
+                } footer: {
+                    Text(String(localized: "settings.autodisable.footer"))
+                }
+
+                // MARK: Parental PIN
+                Section {
+                    if savedPIN.count == 4 {
+                        Button {
+                            // Require existing PIN before allowing change
+                            showPINPromptForChange = true
+                        } label: {
+                            Label(String(localized: "settings.pin.change"),
+                                  systemImage: "lock.rotation")
+                        }
+                        Button(role: .destructive) {
+                            showPINPromptForRemove = true
+                        } label: {
+                            Label(String(localized: "settings.pin.remove"),
+                                  systemImage: "lock.slash")
+                        }
+                    } else {
+                        Button {
+                            showPINSetup = true
+                        } label: {
+                            Label(String(localized: "settings.pin.set"),
+                                  systemImage: "lock.shield")
+                                .foregroundStyle(.blue)
+                        }
+                    }
+                } header: {
+                    Text(String(localized: "settings.section.pin"))
+                } footer: {
+                    Text(String(localized: "settings.pin.footer"))
                 }
 
                 // MARK: About
@@ -247,6 +421,30 @@ struct SettingsView: View {
                 isPresented: $showPicker,
                 selection: $blockingManager.activitySelection
             )
+            .sheet(isPresented: $showPINSetup) {
+                PINSetupView()
+            }
+            .sheet(isPresented: $showPINPromptForChange) {
+                PINPromptView(
+                    onSuccess: {
+                        showPINPromptForChange = false
+                        // Defer until sheet animation completes
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
+                            showPINSetup = true
+                        }
+                    },
+                    onCancel: { showPINPromptForChange = false }
+                )
+            }
+            .sheet(isPresented: $showPINPromptForRemove) {
+                PINPromptView(
+                    onSuccess: {
+                        savedPIN = ""
+                        showPINPromptForRemove = false
+                    },
+                    onCancel: { showPINPromptForRemove = false }
+                )
+            }
         }
     }
 

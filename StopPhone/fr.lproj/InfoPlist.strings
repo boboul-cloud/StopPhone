@@ -1,0 +1,3 @@
+"NSLocationAlwaysAndWhenInUseUsageDescription" = "StopPhone détecte votre vitesse pour bloquer certaines apps pendant la conduite.";
+"NSLocationAlwaysUsageDescription" = "StopPhone surveille votre vitesse en arrière-plan pour activer le blocage automatiquement.";
+"NSLocationWhenInUseUsageDescription" = "StopPhone mesure votre vitesse pour bloquer certaines apps lorsque vous conduisez.";

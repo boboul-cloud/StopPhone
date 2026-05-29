@@ -5,31 +5,83 @@ struct ContentView: View {
     @EnvironmentObject private var speedMonitor: SpeedMonitor
     @EnvironmentObject private var blockingManager: BlockingManager
     @EnvironmentObject private var bluetoothMonitor: BluetoothMonitor
+    @EnvironmentObject private var tripStore: TripStore
+
+    @AppStorage(UDKey.parentPIN) private var savedPIN: String = ""
+    @State private var showInitializing = true
+    @State private var showPINPrompt = false
+    @State private var pinPendingAction: (() -> Void)?
 
     var body: some View {
         ZStack {
             TabView {
                 dashboardTab
                     .tabItem { Label(String(localized: "tab.dashboard"), systemImage: "speedometer") }
+                TripsView()
+                    .tabItem { Label(String(localized: "tab.trips"), systemImage: "map") }
                 SettingsView()
                     .tabItem { Label(String(localized: "tab.settings"), systemImage: "gear") }
             }
 
             // Fullscreen driving overlay
             if blockingManager.isBlocking {
-                DrivingOverlay()
+                DrivingOverlay(onRequestDisable: requestProtectionDisable)
                     .id(blockingManager.blockingEpoch)
                     .transition(.opacity.animation(.easeInOut(duration: 0.4)))
             }
+
+            // Loading veil at startup while permissions resolve
+            if showInitializing {
+                Color(.systemBackground).ignoresSafeArea()
+                VStack(spacing: 14) {
+                    ProgressView()
+                    Text(String(localized: "loading.title"))
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
+                .transition(.opacity)
+            }
+
+            // PIN prompt sheet (visual)
+            if showPINPrompt {
+                Color.black.opacity(0.5).ignoresSafeArea()
+                    .transition(.opacity)
+                PINPromptView(
+                    onSuccess: {
+                        let action = pinPendingAction
+                        pinPendingAction = nil
+                        showPINPrompt = false
+                        action?()
+                    },
+                    onCancel: {
+                        pinPendingAction = nil
+                        showPINPrompt = false
+                    }
+                )
+                .background(Color(.systemBackground))
+                .clipShape(RoundedRectangle(cornerRadius: 20))
+                .padding()
+                .transition(.scale.combined(with: .opacity))
+            }
         }
+        .animation(.easeInOut, value: showPINPrompt)
         .task {
             if speedMonitor.authorizationStatus == .notDetermined {
                 speedMonitor.requestPermission()
             }
             await blockingManager.requestAuthorization()
-            // Wire Combine observers that work in the background (replaces SwiftUI .onChange).
-            // The initial emission handles stale blocking cleanup automatically.
             blockingManager.observeMonitors(speed: speedMonitor, bluetooth: bluetoothMonitor)
+            withAnimation(.easeOut(duration: 0.35)) { showInitializing = false }
+        }
+    }
+
+    /// Wraps a destructive action with the parental PIN if one is set.
+    func requestProtectionDisable(_ action: @escaping () -> Void) {
+        if savedPIN.count == 4 {
+            pinPendingAction = action
+            showPINPrompt = true
+        } else {
+            action()
         }
     }
 
@@ -45,11 +97,10 @@ struct ContentView: View {
 
                 ScrollView {
                     VStack(spacing: 16) {
+                        if blockingManager.isPassengerActive { passengerBanner }
                         enableToggleCard
                         speedCard
                         statusCard
-                        demoCard
-                        callsWarningCard
                         locationPermissionCard
                     }
                     .padding(.horizontal)
@@ -82,7 +133,16 @@ struct ContentView: View {
 
             Toggle("", isOn: Binding(
                 get: { speedMonitor.isEnabled },
-                set: { speedMonitor.setEnabled($0) }
+                set: { newValue in
+                    if newValue {
+                        speedMonitor.setEnabled(true)
+                    } else {
+                        // Disabling is destructive → wrap with PIN if configured
+                        requestProtectionDisable {
+                            speedMonitor.setEnabled(false)
+                        }
+                    }
+                }
             ))
             .labelsHidden()
             .tint(.green)
@@ -97,6 +157,15 @@ struct ContentView: View {
 
     private var speedCard: some View {
         VStack(spacing: 10) {
+            if speedMonitor.isDemoMode {
+                Text(String(localized: "demo.badge"))
+                    .font(.system(size: 10, weight: .bold))
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 3)
+                    .background(Color.orange)
+                    .clipShape(Capsule())
+            }
             Text(speedEmoji)
                 .font(.system(size: 52))
                 .animation(.spring(duration: 0.4), value: speedEmoji)
@@ -272,6 +341,36 @@ struct ContentView: View {
             .strokeBorder(Color.orange.opacity(0.25), lineWidth: 1))
     }
 
+    // MARK: - Passenger banner
+
+    private var passengerBanner: some View {
+        HStack(spacing: 12) {
+            Text("🧍").font(.title2)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(String(format: String(localized: "passenger.banner"), passengerRemainingString))
+                    .font(.subheadline.weight(.semibold))
+            }
+            Spacer()
+            Button {
+                blockingManager.cancelPassengerMode()
+            } label: {
+                Image(systemName: "xmark.circle.fill")
+                    .foregroundStyle(.secondary)
+            }
+            .buttonStyle(.plain)
+        }
+        .padding()
+        .background(Color.blue.opacity(0.12))
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+    }
+
+    private var passengerRemainingString: String {
+        guard let until = blockingManager.passengerSnoozeUntil else { return "" }
+        let s = max(Int(until.timeIntervalSinceNow), 0)
+        let m = s / 60
+        return m > 0 ? "\(m) min" : "\(s) s"
+    }
+
     // MARK: - Location Permission Card
 
     private var locationPermissionCard: some View {
@@ -334,6 +433,7 @@ struct ContentView: View {
 // MARK: - DrivingOverlay
 
 struct DrivingOverlay: View {
+    let onRequestDisable: (@escaping () -> Void) -> Void
     @EnvironmentObject private var speedMonitor: SpeedMonitor
     @EnvironmentObject private var blockingManager: BlockingManager
     @State private var dismissed = false
@@ -408,7 +508,9 @@ struct DrivingOverlay: View {
             titleVisibility: .visible
         ) {
             Button(String(localized: "overlay.disable.confirm.yes"), role: .destructive) {
-                speedMonitor.setEnabled(false)
+                onRequestDisable {
+                    speedMonitor.setEnabled(false)
+                }
             }
             Button(String(localized: "overlay.disable.confirm.no"), role: .cancel) {}
         } message: {

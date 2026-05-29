@@ -7,11 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		33297BB7C8E26F90B1F37BEE /* PINPromptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6C251EF3850BC23ACE8A218 /* PINPromptView.swift */; };
+		39798620D8110EA77D7D5B03 /* TripStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3741A3F2D4C0265AE54CA08 /* TripStore.swift */; };
 		47A0B1D2132F29607959BA7F /* BluetoothMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807B2403ABDA15F0CD755807 /* BluetoothMonitor.swift */; };
+		58DE990581F61191E317ECC3 /* TripsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9863AD5DD897126188A2A6F0 /* TripsView.swift */; };
 		5FFAC207E1B9457344F7A2F3 /* ManagedSettings.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6D57C21F8A7B65A6B4185AC /* ManagedSettings.framework */; };
 		69587F098F6D7FBB8406D19E /* StopPhoneApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D204371F0B1645213AA81459 /* StopPhoneApp.swift */; };
 		6FB67E891CCA2F0DF5090E8B /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF92241E3D37B91957BEE178 /* SettingsView.swift */; };
+		982EF3237F81FAC17A5104B0 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D948CC1BF2AF732B30BF11AB /* Constants.swift */; };
 		9E3576D013DDA824602EDD7E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15CAE1D70ACA7F757C143F69 /* ContentView.swift */; };
+		A43F9C13015CFBC516673F39 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 66D1D6323A3E7F279B6FB22E /* InfoPlist.strings */; };
 		B185277A341C2FD6347B5C2E /* SpeedMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F614F03CC0577B6DC240772 /* SpeedMonitor.swift */; };
 		B5A455866FC8FD430A620087 /* FamilyControls.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1422A4983DB69FF5D4E4BC7F /* FamilyControls.framework */; };
 		B78AFEAB81BEA7071B9CB279 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 52D034FE249AF50E2C0566C7 /* Localizable.strings */; };
@@ -25,15 +30,21 @@
 		1873B7B1C2B8E7ED7A1D511D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		1EE51D0C665DA16A20647219 /* StopPhone.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = StopPhone.entitlements; sourceTree = "<group>"; };
 		5A73A055E069E5FDF20FFEB3 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		6B772FA02B736FA361560E4E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		7150578B872D6B12863AD20F /* BlockingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockingManager.swift; sourceTree = "<group>"; };
 		727F6CD1962AA8942980B65C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		78FCFEFCA593302AADDB8F92 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		807B2403ABDA15F0CD755807 /* BluetoothMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothMonitor.swift; sourceTree = "<group>"; };
 		8AC1376B532FAED66B5B757D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		9863AD5DD897126188A2A6F0 /* TripsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripsView.swift; sourceTree = "<group>"; };
 		9F614F03CC0577B6DC240772 /* SpeedMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedMonitor.swift; sourceTree = "<group>"; };
 		A1732BA089C2B11913D80476 /* StopPhone.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = StopPhone.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A6C251EF3850BC23ACE8A218 /* PINPromptView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINPromptView.swift; sourceTree = "<group>"; };
 		AF92241E3D37B91957BEE178 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		D204371F0B1645213AA81459 /* StopPhoneApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopPhoneApp.swift; sourceTree = "<group>"; };
+		D948CC1BF2AF732B30BF11AB /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		E6D57C21F8A7B65A6B4185AC /* ManagedSettings.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ManagedSettings.framework; path = System/Library/Frameworks/ManagedSettings.framework; sourceTree = SDKROOT; };
+		F3741A3F2D4C0265AE54CA08 /* TripStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,13 +66,18 @@
 				727F6CD1962AA8942980B65C /* Assets.xcassets */,
 				7150578B872D6B12863AD20F /* BlockingManager.swift */,
 				807B2403ABDA15F0CD755807 /* BluetoothMonitor.swift */,
+				D948CC1BF2AF732B30BF11AB /* Constants.swift */,
 				15CAE1D70ACA7F757C143F69 /* ContentView.swift */,
 				8AC1376B532FAED66B5B757D /* Info.plist */,
+				66D1D6323A3E7F279B6FB22E /* InfoPlist.strings */,
 				52D034FE249AF50E2C0566C7 /* Localizable.strings */,
+				A6C251EF3850BC23ACE8A218 /* PINPromptView.swift */,
 				AF92241E3D37B91957BEE178 /* SettingsView.swift */,
 				9F614F03CC0577B6DC240772 /* SpeedMonitor.swift */,
 				1EE51D0C665DA16A20647219 /* StopPhone.entitlements */,
 				D204371F0B1645213AA81459 /* StopPhoneApp.swift */,
+				F3741A3F2D4C0265AE54CA08 /* TripStore.swift */,
+				9863AD5DD897126188A2A6F0 /* TripsView.swift */,
 			);
 			path = StopPhone;
 			sourceTree = "<group>";
@@ -155,6 +171,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D6E1061478E1884885CEA8AD /* Assets.xcassets in Resources */,
+				A43F9C13015CFBC516673F39 /* InfoPlist.strings in Resources */,
 				B78AFEAB81BEA7071B9CB279 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -168,10 +185,14 @@
 			files = (
 				E5361F8AB516D82EE2EBA9F8 /* BlockingManager.swift in Sources */,
 				47A0B1D2132F29607959BA7F /* BluetoothMonitor.swift in Sources */,
+				982EF3237F81FAC17A5104B0 /* Constants.swift in Sources */,
 				9E3576D013DDA824602EDD7E /* ContentView.swift in Sources */,
+				33297BB7C8E26F90B1F37BEE /* PINPromptView.swift in Sources */,
 				6FB67E891CCA2F0DF5090E8B /* SettingsView.swift in Sources */,
 				B185277A341C2FD6347B5C2E /* SpeedMonitor.swift in Sources */,
 				69587F098F6D7FBB8406D19E /* StopPhoneApp.swift in Sources */,
+				39798620D8110EA77D7D5B03 /* TripStore.swift in Sources */,
+				58DE990581F61191E317ECC3 /* TripsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -185,6 +206,15 @@
 				5A73A055E069E5FDF20FFEB3 /* fr */,
 			);
 			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		66D1D6323A3E7F279B6FB22E /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6B772FA02B736FA361560E4E /* en */,
+				78FCFEFCA593302AADDB8F92 /* fr */,
+			);
+			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

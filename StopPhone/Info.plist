@@ -22,11 +22,11 @@
 		<string>en</string>
 	</array>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>StopPhone détecte votre vitesse pour bloquer certaines apps pendant la conduite.</string>
+	<string>StopPhone detects your speed to block certain apps while driving.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>StopPhone surveille votre vitesse en arrière-plan pour activer le blocage automatiquement.</string>
+	<string>StopPhone monitors your speed in the background to automatically activate blocking.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>StopPhone mesure votre vitesse pour bloquer certaines apps lorsque vous conduisez.</string>
+	<string>StopPhone measures your speed to block certain apps while you are driving.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>

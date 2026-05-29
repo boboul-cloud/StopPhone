@@ -18,7 +18,7 @@ final class BluetoothMonitor: ObservableObject {
 
     /// Whether the Bluetooth trigger is active.
     @Published var bluetoothTriggerEnabled: Bool {
-        didSet { UserDefaults.standard.set(bluetoothTriggerEnabled, forKey: "stopphone_bt_trigger")
+        didSet { UserDefaults.standard.set(bluetoothTriggerEnabled, forKey: UDKey.btTrigger)
             updateCurrentState()
         }
     }
@@ -27,9 +27,9 @@ final class BluetoothMonitor: ObservableObject {
     @Published var targetDeviceName: String? {
         didSet {
             if let name = targetDeviceName {
-                UserDefaults.standard.set(name, forKey: "stopphone_bt_device")
+                UserDefaults.standard.set(name, forKey: UDKey.btDevice)
             } else {
-                UserDefaults.standard.removeObject(forKey: "stopphone_bt_device")
+                UserDefaults.standard.removeObject(forKey: UDKey.btDevice)
             }
             updateCurrentState()
         }
@@ -38,8 +38,8 @@ final class BluetoothMonitor: ObservableObject {
     // MARK: - Init
 
     init() {
-        bluetoothTriggerEnabled = UserDefaults.standard.bool(forKey: "stopphone_bt_trigger")
-        targetDeviceName = UserDefaults.standard.string(forKey: "stopphone_bt_device")
+        bluetoothTriggerEnabled = UserDefaults.standard.bool(forKey: UDKey.btTrigger)
+        targetDeviceName = UserDefaults.standard.string(forKey: UDKey.btDevice)
         setupNotifications()
         updateCurrentState()
     }

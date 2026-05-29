@@ -1,5 +1,128 @@
 # StopPhone 🛡️
 
+[🇫🇷 Français](#français) · [🇬🇧 English](#english)
+
+---
+
+## Français
+
+**StopPhone** est une application iOS gratuite et open-source qui bloque automatiquement les apps distrayantes pendant que vous conduisez — grâce à la détection de vitesse GPS et à la connexion Bluetooth de votre voiture.
+
+---
+
+### Fonctionnalités
+
+| Fonctionnalité | Description |
+|---|---|
+| 🚗 **Détection GPS** | S'active automatiquement au-dessus d'un seuil de vitesse configurable (15 km/h par défaut) |
+| 🔵 **Déclencheur Bluetooth** | Démarre le blocage dès que le kit mains-libres de votre voiture se connecte |
+| 📵 **Blocage Screen Time** | Bloque les apps ou catégories via l'API Family Controls d'Apple |
+| 🔴 **Écran d'alerte** | Couvre l'écran d'un avertissement rouge prominent pendant la conduite |
+| 🔔 **Notification locale** | Envoie une notification quand une conduite est détectée |
+| 🔊 **Alerte vocale** | Annonce l'alerte sur les enceintes de la voiture via Bluetooth audio |
+| ⚡ **Raccourcis Siri** | Schéma URL `stopphone://activate` / `stopphone://deactivate` pour les automations Raccourcis |
+| 🌍 **Français & Anglais** | Interface entièrement localisée en français et anglais |
+
+---
+
+### Comment ça marche
+
+```
+Vitesse GPS > seuil
+       OU
+Bluetooth voiture connecté
+       │
+       ▼
+┌──────────────────────────────┐
+│  BlockingManager             │
+│  • Blocage Screen Time       │
+│  • Écran d'alerte plein écran│
+│  • Notification locale       │
+│  • Alerte vocale (BT)        │
+└──────────────────────────────┘
+```
+
+1. **SpeedMonitor** suit la vitesse GPS en arrière-plan via `CoreLocation` avec `activityType = .automotiveNavigation` et une hystérésis de 5 km/h pour éviter les faux déclenchements.
+2. **BluetoothMonitor** écoute les notifications de changement de route `AVAudioSession` pour détecter les connexions HFP / A2DP — aucun appairage CoreBluetooth requis.
+3. **BlockingManager** utilise `FamilyControls` + `ManagedSettings` pour appliquer un écran Screen Time, affiche une superposition SwiftUI plein écran, déclenche une notification locale et parle via `AVSpeechSynthesizer`.
+4. Quand la vitesse repasse sous `seuil - 5 km/h` (hystérésis) ou que le Bluetooth se déconnecte, la protection est automatiquement levée.
+
+---
+
+### Prérequis
+
+- iOS 17+
+- Xcode 15+
+- **Entitlement Family Controls** (via Apple) pour le blocage Screen Time  
+  > Sans cet entitlement, l'app fonctionne quand même — l'écran d'alerte et les notifications restent actifs.
+
+---
+
+### Installation
+
+```bash
+git clone https://github.com/boboul-cloud/StopPhone.git
+cd StopPhone
+open StopPhone.xcodeproj
+```
+
+Sélectionnez votre équipe de développement dans **Signing & Capabilities**, choisissez un vrai appareil (le simulateur ne supporte pas le GPS ni Screen Time) et appuyez sur **⌘R**.
+
+---
+
+### Architecture
+
+```
+StopPhone/
+├── StopPhoneApp.swift       # Point d'entrée, gestion du schéma URL
+├── ContentView.swift        # Dashboard + DrivingOverlay
+├── SettingsView.swift       # Réglages : seuil, Bluetooth, sélecteur d'apps, à propos
+├── SpeedMonitor.swift       # CLLocationManager, suivi vitesse, hystérésis
+├── BluetoothMonitor.swift   # AVAudioSession route change → détection BT voiture
+├── BlockingManager.swift    # FamilyControls, ManagedSettings, notifications, TTS
+├── Info.plist               # Modes arrière-plan, schéma URL, descriptions permissions
+├── StopPhone.entitlements   # com.apple.developer.family-controls
+├── en.lproj/Localizable.strings
+└── fr.lproj/Localizable.strings
+```
+
+---
+
+### Schéma URL
+
+| URL | Action |
+|---|---|
+| `stopphone://activate` | Active la protection + applique le blocage immédiatement |
+| `stopphone://deactivate` | Supprime le blocage + désactive la protection |
+
+---
+
+### Permissions
+
+| Permission | Raison |
+|---|---|
+| **Localisation (Toujours)** | Surveillance de la vitesse en arrière-plan |
+| **Family Controls** | API Screen Time pour bloquer les apps |
+| **Notifications** | Alerter quand une conduite est détectée |
+
+---
+
+### Confidentialité
+
+- **Aucune collecte de données** — tout le traitement est 100 % sur l'appareil
+- **Aucun compte requis**
+- **Aucune requête réseau**
+
+---
+
+### Licence
+
+Licence MIT — voir le fichier [LICENSE](LICENSE).
+
+---
+
+## English
+
 **StopPhone** is a free, open-source iOS app that automatically blocks distracting apps while you're driving — using GPS speed detection and your car's Bluetooth connection.
 
 ---
