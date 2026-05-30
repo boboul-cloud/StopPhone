@@ -39,6 +39,8 @@ final class SpeedMonitor: NSObject, ObservableObject {
     private let locationManager = CLLocationManager()
     /// Callback invoked on each GPS sample (km/h) — wired to BlockingManager.sampleSpeed.
     var onSpeedSample: ((Double) -> Void)?
+    /// Callback invoked on each raw CLLocation update (used by TripStore to record distance + route).
+    var onLocationSample: ((CLLocation, Double) -> Void)?
     private var lastMotionDate: Date = Date()
     private var autoDisableTimer: Timer?
 
@@ -144,6 +146,7 @@ extension SpeedMonitor: CLLocationManagerDelegate {
             guard !self.isDemoMode else { return }
             self.currentSpeedKmh = kmh
             self.onSpeedSample?(kmh)
+            self.onLocationSample?(loc, kmh)
             if kmh > 0 { self.lastMotionDate = Date() }
             guard self.isEnabled else { return }
             if self.isAboveThreshold {

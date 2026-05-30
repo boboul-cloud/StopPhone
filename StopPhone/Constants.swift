@@ -18,6 +18,7 @@ enum UDKey {
     static let parentPIN           = "stopphone_parent_pin"        // 4 digits, plain (low value secret)
     static let trips               = "stopphone_trips"             // JSON-encoded [Trip]
     static let lastNotifTimestamp  = "stopphone_last_notif_ts"
+    static let vehicles            = "stopphone_vehicles"          // JSON-encoded [Vehicle]
 }
 
 /// Tunable numeric constants in one place.

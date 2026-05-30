@@ -27,6 +27,7 @@ struct ContentView: View {
             if blockingManager.isBlocking {
                 DrivingOverlay(onRequestDisable: requestProtectionDisable)
                     .id(blockingManager.blockingEpoch)
+                    .ignoresSafeArea()
                     .transition(.opacity.animation(.easeInOut(duration: 0.4)))
             }
 
@@ -436,6 +437,7 @@ struct DrivingOverlay: View {
     let onRequestDisable: (@escaping () -> Void) -> Void
     @EnvironmentObject private var speedMonitor: SpeedMonitor
     @EnvironmentObject private var blockingManager: BlockingManager
+    @EnvironmentObject private var bluetoothMonitor: BluetoothMonitor
     @State private var dismissed = false
     @State private var showDisableConfirmation = false
 
@@ -444,6 +446,7 @@ struct DrivingOverlay: View {
             Color.red.opacity(0.95).ignoresSafeArea()
 
             VStack(spacing: 28) {
+
                 Spacer()
 
                 Text("🚨")
@@ -471,6 +474,18 @@ struct DrivingOverlay: View {
                         Text(String(localized: "overlay.dismissed.hint"))
                             .font(.caption)
                             .foregroundStyle(.white.opacity(0.6))
+
+                        Button {
+                            blockingManager.enablePassengerMode()
+                        } label: {
+                            Text(String(localized: "overlay.passenger"))
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundStyle(.red)
+                                .padding(.horizontal, 24)
+                                .padding(.vertical, 10)
+                                .background(.white)
+                                .clipShape(Capsule())
+                        }
 
                         Button {
                             showDisableConfirmation = true
@@ -502,6 +517,7 @@ struct DrivingOverlay: View {
                 }
             }
         }
+        .ignoresSafeArea()
         .confirmationDialog(
             String(localized: "overlay.disable.confirm.title"),
             isPresented: $showDisableConfirmation,
@@ -509,7 +525,9 @@ struct DrivingOverlay: View {
         ) {
             Button(String(localized: "overlay.disable.confirm.yes"), role: .destructive) {
                 onRequestDisable {
+                    if speedMonitor.isDemoMode { speedMonitor.stopDemo() }
                     speedMonitor.setEnabled(false)
+                    bluetoothMonitor.bluetoothTriggerEnabled = false
                 }
             }
             Button(String(localized: "overlay.disable.confirm.no"), role: .cancel) {}

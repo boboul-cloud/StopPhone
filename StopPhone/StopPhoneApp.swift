@@ -7,6 +7,7 @@ struct StopPhoneApp: App {
     @StateObject private var blockingManager = BlockingManager()
     @StateObject private var bluetoothMonitor = BluetoothMonitor()
     @StateObject private var tripStore = TripStore()
+    @StateObject private var vehicleStore = VehicleStore()
 
     var body: some Scene {
         WindowGroup {
@@ -15,11 +16,16 @@ struct StopPhoneApp: App {
                 .environmentObject(blockingManager)
                 .environmentObject(bluetoothMonitor)
                 .environmentObject(tripStore)
+                .environmentObject(vehicleStore)
                 .onAppear {
                     // Wire trip recording across managers.
                     blockingManager.tripStore = tripStore
+                    bluetoothMonitor.vehicleStore = vehicleStore
                     speedMonitor.onSpeedSample = { [weak blockingManager] kmh in
                         blockingManager?.sampleSpeed(kmh)
+                    }
+                    speedMonitor.onLocationSample = { [weak blockingManager] loc, kmh in
+                        blockingManager?.sampleLocation(loc, speedKmh: kmh)
                     }
                 }
                 .onOpenURL { url in

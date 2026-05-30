@@ -1,5 +1,6 @@
 import AVFoundation
 import Combine
+import CoreLocation
 import FamilyControls
 import Foundation
 import ManagedSettings
@@ -47,6 +48,8 @@ final class BlockingManager: ObservableObject {
 
     // Trip recording — assigned by the App after init.
     weak var tripStore: TripStore?
+    /// Bluetooth monitor reference, used to tag the current trip with the matched vehicle.
+    private weak var bluetoothMonitor: BluetoothMonitor?
 
     init() {
         totalBlockMode    = UserDefaults.standard.bool(forKey: UDKey.totalBlock)
@@ -152,7 +155,7 @@ final class BlockingManager: ObservableObject {
         blockingEpoch += 1
         isBlocking = true
         UserDefaults.standard.set(true, forKey: UDKey.isBlocking)
-        tripStore?.beginTrip(trigger: trigger)
+        tripStore?.beginTrip(trigger: trigger, vehicleID: bluetoothMonitor?.currentVehicleID)
         sendDrivingNotification()
         if voiceAlertEnabled { speakDrivingAlert() }
         guard isAuthorized else { return }
@@ -190,6 +193,12 @@ final class BlockingManager: ObservableObject {
     func sampleSpeed(_ kmh: Double) {
         guard isBlocking else { return }
         tripStore?.record(speed: kmh)
+    }
+
+    /// Called by SpeedMonitor on each raw location update so the open trip records distance + route.
+    func sampleLocation(_ location: CLLocation, speedKmh: Double) {
+        guard isBlocking else { return }
+        tripStore?.record(location: location, speedKmh: speedKmh)
     }
 
     // MARK: - Notifications
@@ -236,6 +245,18 @@ final class BlockingManager: ObservableObject {
 
     func observeMonitors(speed: SpeedMonitor, bluetooth: BluetoothMonitor) {
         cancellables.removeAll()
+        bluetoothMonitor = bluetooth
+        // If the matched vehicle changes mid-trip (BT route comes online after a speed-triggered block),
+        // tag the open trip with the newly identified vehicle.
+        bluetooth.$currentVehicleID
+            .removeDuplicates()
+            .sink { [weak self] vid in
+                Task { @MainActor in
+                    guard let self, self.isBlocking, let vid else { return }
+                    self.tripStore?.setVehicle(vid)
+                }
+            }
+            .store(in: &cancellables)
         Publishers.CombineLatest(
             Publishers.CombineLatest3(
                 speed.$isAboveThreshold,

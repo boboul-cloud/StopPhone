@@ -38,6 +38,7 @@
 "overlay.dismiss" = "I'm putting my phone down";
 "overlay.dismissed.hint" = "Screen dismissed — focus on the road.";
 "overlay.disable" = "I'm not driving — disable StopPhone";
+"overlay.passenger" = "🧍 I'm a passenger — pause 15 min";
 "overlay.disable.confirm.title" = "Disable protection?";
 "overlay.disable.confirm.message" = "This will stop blocking apps and turn off StopPhone.";
 "overlay.disable.confirm.yes" = "Yes, disable protection";
@@ -165,3 +166,54 @@
 "trips.history.header" = "History";
 "trips.clear.confirm" = "Delete all history?";
 "trips.clear.yes" = "Delete all";
+
+/* Vehicles */
+"vehicles.title" = "My Vehicles";
+"vehicles.section.bluetooth" = "Detected Bluetooth";
+"vehicles.section.bluetooth.footer" = "Connect your vehicle's Bluetooth to register it in one tap.";
+"vehicles.section.list" = "Registered vehicles";
+"vehicles.bt.current" = "Connected device";
+"vehicles.bt.none" = "No Bluetooth connected";
+"vehicles.bt.add" = "Add";
+"vehicles.empty.title" = "No vehicles yet";
+"vehicles.empty.body" = "Add your vehicles to track trips per car, motorcycle, scooter…";
+"vehicles.connected" = "CONNECTED";
+"vehicles.no.bt" = "No Bluetooth attached";
+"vehicles.trips.count" = "%d trip(s)";
+"vehicles.add.title" = "New vehicle";
+"vehicles.edit.title" = "Edit vehicle";
+"vehicles.save" = "Save";
+"vehicles.field.name" = "Name";
+"vehicles.field.emoji" = "Icon";
+"vehicles.field.color" = "Color";
+"vehicles.field.bt" = "Vehicle Bluetooth";
+"vehicles.field.bt.placeholder" = "e.g. Peugeot 208, Robert's AirPods…";
+"vehicles.field.bt.use" = "Use \"%@\"";
+"vehicles.field.bt.footer" = "The name must match (or be contained in) the Bluetooth name advertised by your vehicle.";
+
+/* Settings — vehicles */
+"settings.vehicles.manage" = "My vehicles";
+"settings.bluetooth.unmatched" = "No vehicle matched";
+"settings.bluetooth.footer.vehicles" = "Blocking activates when one of your registered vehicles connects. Trips are grouped per vehicle.";
+
+/* Trips additions */
+"trips.stats.distance" = "Total distance";
+"trips.filter.header" = "Filter by vehicle";
+"trips.filter.all" = "All";
+"trips.vehicle.unknown" = "Unknown vehicle";
+
+/* Trip detail */
+"trip.start" = "Start";
+"trip.end" = "End";
+"trip.noroute" = "No GPS trace for this trip";
+"trip.vehicle.header" = "VEHICLE";
+"trip.vehicle.tap" = "Tap to change";
+"trip.vehicle.none" = "No vehicle";
+"trip.duration" = "Duration";
+"trip.distance" = "Distance";
+"trip.maxspeed" = "Max speed";
+"trip.avgspeed" = "Average speed";
+"trip.trigger" = "Trigger";
+"trip.trigger.speed" = "GPS speed";
+"trip.trigger.bluetooth" = "Vehicle Bluetooth";
+"trip.trigger.demo" = "Demo mode";

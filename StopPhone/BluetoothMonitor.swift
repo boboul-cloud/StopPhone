@@ -3,27 +3,32 @@ import Combine
 import Foundation
 
 /// Detects car Bluetooth audio connections via AVAudioSession route changes (HFP / A2DP).
-/// Classic Bluetooth (used by car audio) is not accessible through CoreBluetooth on iOS,
-/// but audio route notifications reliably fire when a phone connects to a car's hands-free system.
+/// Supports multiple registered vehicles via `VehicleStore` — each vehicle is identified
+/// by its Bluetooth audio device name.
 @MainActor
 final class BluetoothMonitor: ObservableObject {
 
     // MARK: - Published state
 
-    /// True when a qualifying Bluetooth audio device is connected.
+    /// True when a qualifying Bluetooth audio device is connected and the trigger is active.
     @Published var isCarConnected: Bool = false
 
     /// Name of the Bluetooth audio device currently connected (nil if none).
     @Published var currentBluetoothDeviceName: String?
 
+    /// The vehicle currently matched against the connected Bluetooth device, if any.
+    @Published var currentVehicleID: UUID?
+
     /// Whether the Bluetooth trigger is active.
     @Published var bluetoothTriggerEnabled: Bool {
-        didSet { UserDefaults.standard.set(bluetoothTriggerEnabled, forKey: UDKey.btTrigger)
+        didSet {
+            UserDefaults.standard.set(bluetoothTriggerEnabled, forKey: UDKey.btTrigger)
             updateCurrentState()
         }
     }
 
-    /// Optional device name to match. When nil, any BT audio device triggers activation.
+    /// Legacy single pinned device name (still honored for users upgrading from v1).
+    /// When the user has registered Vehicles, those take priority over this.
     @Published var targetDeviceName: String? {
         didSet {
             if let name = targetDeviceName {
@@ -34,6 +39,17 @@ final class BluetoothMonitor: ObservableObject {
             updateCurrentState()
         }
     }
+
+    /// Reference to the vehicles store — when set, BT matching considers all vehicles.
+    weak var vehicleStore: VehicleStore? {
+        didSet {
+            vehicleStoreCancellable = vehicleStore?.objectWillChange.sink { [weak self] _ in
+                Task { @MainActor in self?.updateCurrentState() }
+            }
+            updateCurrentState()
+        }
+    }
+    private var vehicleStoreCancellable: AnyCancellable?
 
     // MARK: - Init
 
@@ -46,12 +62,12 @@ final class BluetoothMonitor: ObservableObject {
 
     // MARK: - Public API
 
-    /// Save the currently connected BT device as the target device.
+    /// Save the currently connected BT device as the legacy single target (used in Settings fallback).
     func learnCurrentDevice() {
         targetDeviceName = currentBluetoothDeviceName
     }
 
-    /// Clear the pinned device — any Bluetooth will trigger activation.
+    /// Clear the legacy pinned device.
     func clearTargetDevice() {
         targetDeviceName = nil
     }
@@ -74,7 +90,6 @@ final class BluetoothMonitor: ObservableObject {
     private func updateCurrentState() {
         let outputs = AVAudioSession.sharedInstance().currentRoute.outputs
 
-        // Bluetooth audio port types that car hands-free systems use
         let btPort = outputs.first(where: {
             $0.portType == .bluetoothHFP
             || $0.portType == .bluetoothA2DP
@@ -85,17 +100,41 @@ final class BluetoothMonitor: ObservableObject {
 
         guard bluetoothTriggerEnabled else {
             isCarConnected = false
+            currentVehicleID = nil
             return
         }
 
-        if let port = btPort {
-            if let target = targetDeviceName, !target.isEmpty {
-                isCarConnected = port.portName.localizedCaseInsensitiveContains(target)
-            } else {
-                isCarConnected = true   // any BT audio device
-            }
-        } else {
+        guard let port = btPort else {
             isCarConnected = false
+            currentVehicleID = nil
+            return
+        }
+
+        // 1. Match against registered vehicles first.
+        if let store = vehicleStore, !store.vehicles.isEmpty {
+            if let v = store.matchingVehicle(for: port.portName) {
+                currentVehicleID = v.id
+                isCarConnected = true
+                return
+            }
+            // No registered vehicle matches — also honor the legacy single target if any.
+            if let target = targetDeviceName, !target.isEmpty {
+                currentVehicleID = nil
+                isCarConnected = port.portName.localizedCaseInsensitiveContains(target)
+                return
+            }
+            // Vehicles registered but none matched → don't trigger blindly.
+            currentVehicleID = nil
+            isCarConnected = false
+            return
+        }
+
+        // 2. Legacy behaviour: pinned single device, or "any BT".
+        currentVehicleID = nil
+        if let target = targetDeviceName, !target.isEmpty {
+            isCarConnected = port.portName.localizedCaseInsensitiveContains(target)
+        } else {
+            isCarConnected = true
         }
     }
 }

@@ -38,6 +38,7 @@
 "overlay.dismiss" = "Je pose mon téléphone";
 "overlay.dismissed.hint" = "Écran masqué — concentrez-vous sur la route.";
 "overlay.disable" = "Je ne conduis pas — désactiver StopPhone";
+"overlay.passenger" = "🧍 Je suis passager — pause 15 min";
 "overlay.disable.confirm.title" = "Désactiver la protection ?";
 "overlay.disable.confirm.message" = "Cela arrêtera le blocage des apps et désactivera StopPhone.";
 "overlay.disable.confirm.yes" = "Oui, désactiver la protection";
@@ -165,3 +166,54 @@
 "trips.history.header" = "Historique";
 "trips.clear.confirm" = "Supprimer tout l'historique ?";
 "trips.clear.yes" = "Tout supprimer";
+
+/* Véhicules */
+"vehicles.title" = "Mes véhicules";
+"vehicles.section.bluetooth" = "Bluetooth détecté";
+"vehicles.section.bluetooth.footer" = "Connectez le Bluetooth de votre véhicule pour pouvoir l'enregistrer en un tap.";
+"vehicles.section.list" = "Véhicules enregistrés";
+"vehicles.bt.current" = "Appareil connecté";
+"vehicles.bt.none" = "Aucun Bluetooth connecté";
+"vehicles.bt.add" = "Ajouter";
+"vehicles.empty.title" = "Aucun véhicule";
+"vehicles.empty.body" = "Ajoutez vos véhicules pour suivre vos trajets par voiture, moto, scooter…";
+"vehicles.connected" = "CONNECTÉ";
+"vehicles.no.bt" = "Aucun Bluetooth associé";
+"vehicles.trips.count" = "%d trajet(s)";
+"vehicles.add.title" = "Nouveau véhicule";
+"vehicles.edit.title" = "Modifier le véhicule";
+"vehicles.save" = "Enregistrer";
+"vehicles.field.name" = "Nom";
+"vehicles.field.emoji" = "Icône";
+"vehicles.field.color" = "Couleur";
+"vehicles.field.bt" = "Bluetooth du véhicule";
+"vehicles.field.bt.placeholder" = "Ex. : Peugeot 208, AirPods de Robert…";
+"vehicles.field.bt.use" = "Utiliser \"%@\"";
+"vehicles.field.bt.footer" = "Le nom doit correspondre (ou être contenu dans) le nom Bluetooth affiché par votre véhicule.";
+
+/* Settings — véhicules */
+"settings.vehicles.manage" = "Mes véhicules";
+"settings.bluetooth.unmatched" = "Aucun véhicule associé";
+"settings.bluetooth.footer.vehicles" = "Le blocage s'active quand l'un de vos véhicules enregistrés se connecte. Vos trajets sont rangés par véhicule.";
+
+/* Trips additions */
+"trips.stats.distance" = "Distance totale";
+"trips.filter.header" = "Filtrer par véhicule";
+"trips.filter.all" = "Tous";
+"trips.vehicle.unknown" = "Véhicule inconnu";
+
+/* Trip detail */
+"trip.start" = "Départ";
+"trip.end" = "Arrivée";
+"trip.noroute" = "Aucun tracé GPS pour ce trajet";
+"trip.vehicle.header" = "VÉHICULE";
+"trip.vehicle.tap" = "Toucher pour changer";
+"trip.vehicle.none" = "Aucun véhicule";
+"trip.duration" = "Durée";
+"trip.distance" = "Distance";
+"trip.maxspeed" = "Vitesse max";
+"trip.avgspeed" = "Vitesse moyenne";
+"trip.trigger" = "Déclenchement";
+"trip.trigger.speed" = "Vitesse GPS";
+"trip.trigger.bluetooth" = "Bluetooth véhicule";
+"trip.trigger.demo" = "Mode démo";
