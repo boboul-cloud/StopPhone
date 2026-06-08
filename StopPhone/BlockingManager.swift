@@ -24,6 +24,9 @@ final class BlockingManager: ObservableObject {
     @Published var voiceAlertEnabled: Bool {
         didSet { UserDefaults.standard.set(voiceAlertEnabled, forKey: UDKey.voiceAlertEnabled) }
     }
+    @Published var notificationsEnabled: Bool {
+        didSet { UserDefaults.standard.set(notificationsEnabled, forKey: UDKey.notifEnabled) }
+    }
     /// Epoch incremented every time blocking is (re)applied — drives overlay reappearance.
     @Published var blockingEpoch: Int = 0
     @Published var activitySelection: FamilyActivitySelection = FamilyActivitySelection() {
@@ -45,6 +48,8 @@ final class BlockingManager: ObservableObject {
     private let speechSynthesizer = AVSpeechSynthesizer()
     private var lastNotificationDate: Date?
     private var snoozeTimer: Timer?
+    /// Task used to debounce the stop-blocking trigger (handles momentary BT disconnects).
+    private var stopBlockingTask: Task<Void, Never>?
 
     // Trip recording — assigned by the App after init.
     weak var tripStore: TripStore?
@@ -52,9 +57,10 @@ final class BlockingManager: ObservableObject {
     private weak var bluetoothMonitor: BluetoothMonitor?
 
     init() {
-        totalBlockMode    = UserDefaults.standard.bool(forKey: UDKey.totalBlock)
-        voiceAlertEnabled = UserDefaults.standard.object(forKey: UDKey.voiceAlertEnabled) as? Bool ?? true
-        isAuthorized      = AuthorizationCenter.shared.authorizationStatus == .approved
+        totalBlockMode        = UserDefaults.standard.bool(forKey: UDKey.totalBlock)
+        voiceAlertEnabled     = UserDefaults.standard.object(forKey: UDKey.voiceAlertEnabled) as? Bool ?? true
+        notificationsEnabled  = UserDefaults.standard.object(forKey: UDKey.notifEnabled) as? Bool ?? true
+        isAuthorized          = AuthorizationCenter.shared.authorizationStatus == .approved
         loadSelection()
         // Restore passenger snooze (drop if expired)
         let ts = UserDefaults.standard.double(forKey: UDKey.passengerUntil)
@@ -156,7 +162,7 @@ final class BlockingManager: ObservableObject {
         isBlocking = true
         UserDefaults.standard.set(true, forKey: UDKey.isBlocking)
         tripStore?.beginTrip(trigger: trigger, vehicleID: bluetoothMonitor?.currentVehicleID)
-        sendDrivingNotification()
+        if notificationsEnabled { sendDrivingNotification() }
         if voiceAlertEnabled { speakDrivingAlert() }
         guard isAuthorized else { return }
         if totalBlockMode {
@@ -182,6 +188,7 @@ final class BlockingManager: ObservableObject {
     }
 
     func removeBlocking(recordTrip: Bool = true) {
+        stopBlockingTask = nil
         if isAuthorized { store.clearAllSettings() }
         isBlocking = false
         UserDefaults.standard.set(false, forKey: UDKey.isBlocking)
@@ -213,7 +220,7 @@ final class BlockingManager: ObservableObject {
         content.title = String(localized: "notif.driving.title")
         content.body = String(localized: "notif.driving.body")
         content.sound = .default
-        content.interruptionLevel = .timeSensitive
+        content.interruptionLevel = .active
         content.categoryIdentifier = "STOPPHONE_DRIVING"
         let request = UNNotificationRequest(
             identifier: "stopphone.driving",
@@ -273,13 +280,24 @@ final class BlockingManager: ObservableObject {
             Task { @MainActor [weak self] in
                 guard let self else { return }
                 if shouldBlock {
+                    // Cancel any pending delayed stop.
+                    self.stopBlockingTask?.cancel()
+                    self.stopBlockingTask = nil
                     let t: Trip.Trigger
                     if speedTriggered && speed.isDemoMode { t = .demo }
                     else if speedTriggered { t = .speed }
                     else { t = .bluetooth }
                     self.applyBlocking(trigger: t)
                 } else {
-                    self.removeBlocking()
+                    // Delay the stop by 4 s to absorb momentary BT disconnects.
+                    // If the trigger goes back to true within that window, the stop is cancelled.
+                    guard self.stopBlockingTask == nil else { return }
+                    self.stopBlockingTask = Task { @MainActor [weak self] in
+                        try? await Task.sleep(for: .seconds(4))
+                        guard let self, !Task.isCancelled else { return }
+                        self.stopBlockingTask = nil
+                        self.removeBlocking()
+                    }
                 }
             }
         }

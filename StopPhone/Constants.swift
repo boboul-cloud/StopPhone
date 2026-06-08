@@ -18,21 +18,23 @@ enum UDKey {
     static let parentPIN           = "stopphone_parent_pin"        // 4 digits, plain (low value secret)
     static let trips               = "stopphone_trips"             // JSON-encoded [Trip]
     static let lastNotifTimestamp  = "stopphone_last_notif_ts"
+    static let notifEnabled        = "stopphone_notif_enabled"      // Bool, default true
     static let vehicles            = "stopphone_vehicles"          // JSON-encoded [Vehicle]
+    static let fuelPricePerLiter   = "stopphone_fuel_price"        // Double, price €/L
 }
 
 /// Tunable numeric constants in one place.
 enum AppConstants {
     /// Anti-flutter: deactivate only when speed drops this many km/h below the threshold.
-    static let hysteresisGap: Double = 5.0
+    static let hysteresisGap: Double = 8.0
     /// Below this GPS speed (km/h) we consider the device stationary (filters jitter).
-    static let speedNoiseFloor: Double = 2.0
+    static let speedNoiseFloor: Double = 3.0
+    /// Consecutive GPS readings above threshold required to trigger blocking (anti false-positive).
+    static let speedConfirmationSamples: Int = 3
     /// Minimum delay between two driving notifications (seconds).
     static let notificationCooldown: TimeInterval = 30
     /// Default passenger snooze duration (seconds).
     static let passengerSnoozeDuration: TimeInterval = 15 * 60
-    /// GPS distance filter (meters). Good balance: enough resolution for car speeds, easy on battery.
-    static let gpsDistanceFilter: Double = 10
     /// Default speed threshold (km/h) on first launch.
     static let defaultSpeedThreshold: Double = 15
     /// Trip is recorded only if duration exceeds this (seconds) — filters phantom blocks from BT/GPS jitter.

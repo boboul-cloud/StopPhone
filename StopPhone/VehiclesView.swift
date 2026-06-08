@@ -161,6 +161,7 @@ struct VehicleEditView: View {
     @State private var emoji: String
     @State private var colorHex: String
     @State private var bluetoothDeviceName: String
+    @State private var fuelConsumption: String
 
     init(vehicle: Vehicle?, onSave: @escaping (Vehicle) -> Void) {
         self.original = vehicle
@@ -169,6 +170,11 @@ struct VehicleEditView: View {
         _emoji = State(initialValue: vehicle?.emoji ?? "🚗")
         _colorHex = State(initialValue: vehicle?.colorHex ?? "#FF8A00")
         _bluetoothDeviceName = State(initialValue: vehicle?.bluetoothDeviceName ?? "")
+        if let c = vehicle?.fuelConsumptionL100km {
+            _fuelConsumption = State(initialValue: String(format: "%.1f", c))
+        } else {
+            _fuelConsumption = State(initialValue: "")
+        }
     }
 
     var body: some View {
@@ -236,6 +242,21 @@ struct VehicleEditView: View {
                 } footer: {
                     Text(String(localized: "vehicles.field.bt.footer"))
                 }
+
+                Section {
+                    HStack {
+                        TextField(String(localized: "vehicles.field.consumption.placeholder"),
+                                  text: $fuelConsumption)
+                            .keyboardType(.decimalPad)
+                        Text(String(localized: "vehicles.field.consumption.unit"))
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
+                } header: {
+                    Text(String(localized: "vehicles.field.consumption"))
+                } footer: {
+                    Text(String(localized: "vehicles.field.consumption.footer"))
+                }
             }
             .navigationTitle(original == nil
                              ? String(localized: "vehicles.add.title")
@@ -250,13 +271,18 @@ struct VehicleEditView: View {
                         let trimmedName = name.trimmingCharacters(in: .whitespaces)
                         guard !trimmedName.isEmpty else { return }
                         let bt = bluetoothDeviceName.trimmingCharacters(in: .whitespaces)
+                        let consoStr = fuelConsumption
+                            .trimmingCharacters(in: .whitespaces)
+                            .replacingOccurrences(of: ",", with: ".")
+                        let conso = Double(consoStr).flatMap { $0 > 0 ? $0 : nil }
                         let new = Vehicle(
                             id: original?.id ?? UUID(),
                             name: trimmedName,
                             emoji: emoji,
                             bluetoothDeviceName: bt.isEmpty ? nil : bt,
                             colorHex: colorHex,
-                            createdAt: original?.createdAt ?? Date()
+                            createdAt: original?.createdAt ?? Date(),
+                            fuelConsumptionL100km: conso
                         )
                         onSave(new)
                         dismiss()

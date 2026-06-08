@@ -43,6 +43,8 @@ final class SpeedMonitor: NSObject, ObservableObject {
     var onLocationSample: ((CLLocation, Double) -> Void)?
     private var lastMotionDate: Date = Date()
     private var autoDisableTimer: Timer?
+    /// Consecutive GPS readings above the speed threshold — trigger only after N samples.
+    private var consecutiveAboveThreshold: Int = 0
 
     // MARK: - Init
 
@@ -55,8 +57,8 @@ final class SpeedMonitor: NSObject, ObservableObject {
         isAboveThreshold = UserDefaults.standard.bool(forKey: UDKey.aboveThreshold)
 
         locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest          // was BestForNavigation (battery hog)
-        locationManager.distanceFilter = AppConstants.gpsDistanceFilter    // was none — saves battery
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.distanceFilter = kCLDistanceFilterNone             // continuous updates → speed drops to 0 when stopped
         locationManager.activityType = .automotiveNavigation
         locationManager.allowsBackgroundLocationUpdates = true
         locationManager.pausesLocationUpdatesAutomatically = false
@@ -85,6 +87,7 @@ final class SpeedMonitor: NSObject, ObservableObject {
             locationManager.stopMonitoringSignificantLocationChanges()
             currentSpeedKmh = 0
             isAboveThreshold = false
+            consecutiveAboveThreshold = 0
             UserDefaults.standard.removeObject(forKey: UDKey.aboveThreshold)
         }
     }
@@ -109,6 +112,7 @@ final class SpeedMonitor: NSObject, ObservableObject {
         isDemoMode = false
         currentSpeedKmh = 0
         isAboveThreshold = false
+        consecutiveAboveThreshold = 0
     }
 
     // MARK: - Auto-disable
@@ -151,11 +155,17 @@ extension SpeedMonitor: CLLocationManagerDelegate {
             guard self.isEnabled else { return }
             if self.isAboveThreshold {
                 if kmh < max(self.speedThreshold - AppConstants.hysteresisGap, 0) {
+                    self.consecutiveAboveThreshold = 0
                     self.isAboveThreshold = false
                 }
             } else {
                 if kmh >= self.speedThreshold {
-                    self.isAboveThreshold = true
+                    self.consecutiveAboveThreshold += 1
+                    if self.consecutiveAboveThreshold >= AppConstants.speedConfirmationSamples {
+                        self.isAboveThreshold = true
+                    }
+                } else {
+                    self.consecutiveAboveThreshold = 0
                 }
             }
         }

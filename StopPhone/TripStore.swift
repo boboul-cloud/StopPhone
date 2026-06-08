@@ -100,7 +100,7 @@ final class TripStore: ObservableObject {
 
     private static let maxStoredTrips = 200
     /// Cap on stored route points per trip (sliding window).
-    private static let maxRoutePointsPerTrip = 2000
+    private static let maxRoutePointsPerTrip = 5000
 
     // In-progress trip aggregation
     private var openTripID: UUID?
@@ -157,7 +157,7 @@ final class TripStore: ObservableObject {
         guard location.horizontalAccuracy > 0, location.horizontalAccuracy < 50 else { return }
         if let last = lastSampleLocation {
             let delta = location.distance(from: last)
-            if delta >= 5 {
+            if delta >= 2 {
                 openDistance += delta
                 appendRoutePoint(location: location, speedKmh: speedKmh)
                 lastSampleLocation = location
@@ -246,6 +246,34 @@ final class TripStore: ObservableObject {
         guard let idx = trips.firstIndex(where: { $0.id == tripID }) else { return }
         trips[idx].vehicleID = vehicleID
         save()
+    }
+
+    // MARK: - CSV Export
+
+    /// Generates a CSV string from the given trips.
+    func csvExport(trips: [Trip], vehicles: [Vehicle], fuelPricePerLiter: Double) -> String {
+        let header = "Date,Vehicle,Duration (min),Distance (km),Max Speed (km/h),Avg Speed (km/h),Trigger,Cost (€)"
+        let fmt = ISO8601DateFormatter()
+        let rows: [String] = trips.map { trip in
+            let vehicle = vehicles.first { $0.id == trip.vehicleID }
+            let dateStr  = fmt.string(from: trip.startDate)
+            let name     = vehicle?.name ?? "Unknown"
+            let dur      = String(format: "%.1f", trip.duration / 60)
+            let dist     = String(format: "%.2f", trip.distanceKm)
+            let maxSpd   = String(format: "%.0f", trip.maxSpeedKmh)
+            let avgSpd   = String(format: "%.0f", trip.avgSpeedKmh)
+            let trigger  = trip.trigger.rawValue
+            let cost: String
+            if let v = vehicle, let conso = v.fuelConsumptionL100km, fuelPricePerLiter > 0 {
+                cost = String(format: "%.2f", trip.distanceKm / 100.0 * conso * fuelPricePerLiter)
+            } else {
+                cost = ""
+            }
+            // Escape double-quotes in name
+            let safeName = name.replacingOccurrences(of: "\"", with: "\"\"")
+            return "\(dateStr),\"\(safeName)\",\(dur),\(dist),\(maxSpd),\(avgSpd),\(trigger),\(cost)"
+        }
+        return ([header] + rows).joined(separator: "\n")
     }
 
     // MARK: - Persistence

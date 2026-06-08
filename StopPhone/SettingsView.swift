@@ -265,17 +265,22 @@ struct SettingsView: View {
                     Text("Demo")
                 }
 
-                // MARK: Voice alert
+                // MARK: Alerts (notifications + voice)
                 Section {
+                    Toggle(isOn: $blockingManager.notificationsEnabled) {
+                        Label(String(localized: "settings.notif.toggle"),
+                              systemImage: "bell.fill")
+                    }
+                    .tint(.blue)
                     Toggle(isOn: $blockingManager.voiceAlertEnabled) {
                         Label(String(localized: "settings.voice.toggle"),
                               systemImage: "speaker.wave.2.fill")
                     }
                     .tint(.purple)
                 } header: {
-                    Text(String(localized: "settings.section.voice"))
+                    Text(String(localized: "settings.section.alerts"))
                 } footer: {
-                    Text(String(localized: "settings.voice.footer"))
+                    Text(String(localized: "settings.alerts.footer"))
                 }
 
                 // MARK: Passenger mode

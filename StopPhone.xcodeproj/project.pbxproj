@@ -22,6 +22,7 @@
 		B5A455866FC8FD430A620087 /* FamilyControls.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1422A4983DB69FF5D4E4BC7F /* FamilyControls.framework */; };
 		B78AFEAB81BEA7071B9CB279 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 52D034FE249AF50E2C0566C7 /* Localizable.strings */; };
 		BFD5D131EB18CB1F1843A91C /* Vehicle.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8F9BAEC1E3BFD2417F7324E /* Vehicle.swift */; };
+		4D9C99D632954E01B38259D8 /* TripPDFExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74177C2DAF70472DAAFC2315 /* TripPDFExporter.swift */; };
 		D6E1061478E1884885CEA8AD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 727F6CD1962AA8942980B65C /* Assets.xcassets */; };
 		E5361F8AB516D82EE2EBA9F8 /* BlockingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7150578B872D6B12863AD20F /* BlockingManager.swift */; };
 /* End PBXBuildFile section */
@@ -48,6 +49,7 @@
 		D948CC1BF2AF732B30BF11AB /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		E6D57C21F8A7B65A6B4185AC /* ManagedSettings.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ManagedSettings.framework; path = System/Library/Frameworks/ManagedSettings.framework; sourceTree = SDKROOT; };
 		F3741A3F2D4C0265AE54CA08 /* TripStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripStore.swift; sourceTree = "<group>"; };
+		74177C2DAF70472DAAFC2315 /* TripPDFExporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripPDFExporter.swift; sourceTree = "<group>"; };
 		F78992AAAC0B479DF5F28A58 /* VehiclesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehiclesView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -81,6 +83,7 @@
 				1EE51D0C665DA16A20647219 /* StopPhone.entitlements */,
 				D204371F0B1645213AA81459 /* StopPhoneApp.swift */,
 				F3741A3F2D4C0265AE54CA08 /* TripStore.swift */,
+				74177C2DAF70472DAAFC2315 /* TripPDFExporter.swift */,
 				9863AD5DD897126188A2A6F0 /* TripsView.swift */,
 				C8F9BAEC1E3BFD2417F7324E /* Vehicle.swift */,
 				F78992AAAC0B479DF5F28A58 /* VehiclesView.swift */,
@@ -198,6 +201,7 @@
 				B185277A341C2FD6347B5C2E /* SpeedMonitor.swift in Sources */,
 				69587F098F6D7FBB8406D19E /* StopPhoneApp.swift in Sources */,
 				39798620D8110EA77D7D5B03 /* TripStore.swift in Sources */,
+				4D9C99D632954E01B38259D8 /* TripPDFExporter.swift in Sources */,
 				58DE990581F61191E317ECC3 /* TripsView.swift in Sources */,
 				BFD5D131EB18CB1F1843A91C /* Vehicle.swift in Sources */,
 				A71B7D2DEFC53D6D98F39DBF /* VehiclesView.swift in Sources */,
@@ -362,10 +366,12 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				CURRENT_PROJECT_VERSION = 5;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stopphone.driver;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 6.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -384,10 +390,12 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				CURRENT_PROJECT_VERSION = 5;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stopphone.driver;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 6.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};

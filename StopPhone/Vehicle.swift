@@ -9,6 +9,8 @@ struct Vehicle: Identifiable, Codable, Equatable {
     var bluetoothDeviceName: String?  // exact substring match against the BT port name
     var colorHex: String              // "#FF6A00"
     let createdAt: Date
+    /// Average fuel consumption in L/100km. nil = not configured.
+    var fuelConsumptionL100km: Double?
 
     init(
         id: UUID = UUID(),
@@ -16,7 +18,8 @@ struct Vehicle: Identifiable, Codable, Equatable {
         emoji: String = "🚗",
         bluetoothDeviceName: String? = nil,
         colorHex: String = "#FF8A00",
-        createdAt: Date = Date()
+        createdAt: Date = Date(),
+        fuelConsumptionL100km: Double? = nil
     ) {
         self.id = id
         self.name = name
@@ -24,6 +27,7 @@ struct Vehicle: Identifiable, Codable, Equatable {
         self.bluetoothDeviceName = bluetoothDeviceName
         self.colorHex = colorHex
         self.createdAt = createdAt
+        self.fuelConsumptionL100km = fuelConsumptionL100km
     }
 
     var color: Color { Color(hex: colorHex) ?? .orange }

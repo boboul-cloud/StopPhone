@@ -23,6 +23,13 @@
 "block.overlay.sub" = "Covers the screen in red while driving";
 "block.notif" = "Notification";
 "block.notif.sub" = "Opens StopPhone automatically when driving is detected";
+"status.card.caption" = "Active when driving is detected:";
+"chip.block.total" = "All apps blocked";
+"chip.block.all" = "Apps blocked";
+"chip.block.custom" = "Selected apps blocked";
+"chip.overlay" = "Alert screen";
+"chip.notif" = "Notification";
+"chip.voice" = "Voice alert";
 
 /* Screen Time blocking rows */
 "block.screentime.all" = "Screen Time — All apps";
@@ -88,7 +95,7 @@
 "shortcuts.step1" = "Open the Shortcuts app";
 "shortcuts.step2" = "Go to Automation → + → Personal Automation";
 "shortcuts.step3" = "Choose \"Bluetooth\" → select your car → \"Connects\"";
-"shortcuts.step4" = "Add action \"Open URLs\" → enter: stopphone://activate";
+"shortcuts.step4" = "Add action \"Open App\" → select StopPhone";
 "shortcuts.open" = "Open Shortcuts app";
 
 /* About */
@@ -123,10 +130,10 @@
 "settings.total.block.footer.on" = "All apps and websites are blocked when driving is detected.";
 "settings.total.block.footer.off" = "Only the selected apps are blocked. Enable this to block everything.";
 
-/* Voice */
-"settings.section.voice" = "Voice alert";
-"settings.voice.toggle" = "Spoken announcement when blocking starts";
-"settings.voice.footer" = "The voice plays automatically through the car speakers via Bluetooth.";
+/* Voice / Alerts */
+"settings.section.alerts" = "Alerts";
+"settings.notif.toggle" = "Notification when driving starts";
+"settings.alerts.footer" = "Disable notifications for a fully silent mode. The voice plays via Bluetooth when your car connects.";
 
 /* Passenger mode */
 "settings.section.passenger" = "Passenger mode";
@@ -200,7 +207,33 @@
 "trips.stats.distance" = "Total distance";
 "trips.filter.header" = "Filter by vehicle";
 "trips.filter.all" = "All";
+"trips.filter.empty" = "No trips match this filter.";
 "trips.vehicle.unknown" = "Unknown vehicle";
+
+/* Trip period filter */
+"trips.period.header" = "Filter by period";
+"trips.period.all" = "All";
+"trips.period.today" = "Today";
+"trips.period.week" = "This week";
+"trips.period.month" = "This month";
+"trips.period.custom" = "Custom";
+"trips.period.from" = "From";
+"trips.period.to" = "To";
+
+/* Trip export */
+"trips.export.filename" = "trips.csv";
+
+/* Fuel & cost */
+"trips.stats.fuel" = "Fuel price";
+"trips.stats.totalcost" = "Total cost";
+"trip.cost" = "Estimated cost";
+"trips.keyboard.done" = "Done";
+
+/* Vehicle consumption */
+"vehicles.field.consumption" = "Fuel consumption";
+"vehicles.field.consumption.placeholder" = "e.g. 7.5";
+"vehicles.field.consumption.footer" = "Average consumption in L/100km. Used to estimate trip cost.";
+"vehicles.field.consumption.unit" = "L/100km";
 
 /* Trip detail */
 "trip.start" = "Start";

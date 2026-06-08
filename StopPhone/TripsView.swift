@@ -1,12 +1,58 @@
 import MapKit
 import SwiftUI
 
+// MARK: - Share sheet wrapper
+
+private struct ActivityView: UIViewControllerRepresentable {
+    let items: [Any]
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        UIActivityViewController(activityItems: items, applicationActivities: nil)
+    }
+    func updateUIViewController(_ vc: UIActivityViewController, context: Context) {}
+}
+
+// MARK: - Period filter tag
+
+fileprivate enum PeriodTag: String, CaseIterable {
+    case all, today, week, month, custom
+
+    var localized: String {
+        switch self {
+        case .all:    return String(localized: "trips.period.all")
+        case .today:  return String(localized: "trips.period.today")
+        case .week:   return String(localized: "trips.period.week")
+        case .month:  return String(localized: "trips.period.month")
+        case .custom: return String(localized: "trips.period.custom")
+        }
+    }
+
+    var emoji: String {
+        switch self {
+        case .all:    return "📋"
+        case .today:  return "📅"
+        case .week:   return "🗓️"
+        case .month:  return "📆"
+        case .custom: return "🔍"
+        }
+    }
+}
+
 struct TripsView: View {
 
     @EnvironmentObject private var tripStore: TripStore
     @EnvironmentObject private var vehicleStore: VehicleStore
+
+    @AppStorage(UDKey.fuelPricePerLiter) private var fuelPricePerLiter: Double = 1.85
+
+    @FocusState private var fuelPriceFocused: Bool
     @State private var showClearConfirm = false
-    @State private var vehicleFilter: UUID? = nil   // nil = all
+    @State private var isExportingPDF = false
+    @State private var pdfShareURL: URL? = nil
+    @State private var showPDFShare = false
+    @State private var vehicleFilter: UUID? = nil
+    @State private var periodTag: PeriodTag = .all
+    @State private var customStart: Date = Calendar.current.date(byAdding: .month, value: -1, to: Date()) ?? Date()
+    @State private var customEnd: Date = Date()
 
     var body: some View {
         NavigationStack {
@@ -21,12 +67,38 @@ struct TripsView: View {
             .toolbar {
                 if !tripStore.trips.isEmpty {
                     ToolbarItem(placement: .topBarTrailing) {
+                        Button {
+                            Task {
+                                isExportingPDF = true
+                                pdfShareURL = await TripPDFExporter.export(
+                                    trips: filteredTrips,
+                                    vehicles: vehicleStore.vehicles,
+                                    fuelPricePerLiter: fuelPricePerLiter
+                                )
+                                isExportingPDF = false
+                                showPDFShare = true
+                            }
+                        } label: {
+                            if isExportingPDF {
+                                ProgressView().tint(.primary)
+                            } else {
+                                Image(systemName: "square.and.arrow.up")
+                            }
+                        }
+                        .disabled(isExportingPDF)
+                    }
+                    ToolbarItem(placement: .topBarTrailing) {
                         Button(role: .destructive) {
                             showClearConfirm = true
                         } label: {
                             Image(systemName: "trash")
                         }
                     }
+                }
+            }
+            .sheet(isPresented: $showPDFShare) {
+                if let url = pdfShareURL {
+                    ActivityView(items: [url])
                 }
             }
             .confirmationDialog(
@@ -42,10 +114,48 @@ struct TripsView: View {
         }
     }
 
+    // MARK: - Filtered data
+
     private var filteredTrips: [Trip] {
-        guard let id = vehicleFilter else { return tripStore.trips }
-        return tripStore.trips.filter { $0.vehicleID == id }
+        var result = tripStore.trips
+        if let id = vehicleFilter {
+            result = result.filter { $0.vehicleID == id }
+        }
+        let cal = Calendar.current
+        switch periodTag {
+        case .all:
+            break
+        case .today:
+            let start = cal.startOfDay(for: Date())
+            result = result.filter { $0.startDate >= start }
+        case .week:
+            let start = cal.dateInterval(of: .weekOfYear, for: Date())?.start ?? Date()
+            result = result.filter { $0.startDate >= start }
+        case .month:
+            let start = cal.dateInterval(of: .month, for: Date())?.start ?? Date()
+            result = result.filter { $0.startDate >= start }
+        case .custom:
+            let start = cal.startOfDay(for: customStart)
+            let end = cal.date(byAdding: .day, value: 1, to: cal.startOfDay(for: customEnd)) ?? customEnd
+            result = result.filter { $0.startDate >= start && $0.startDate < end }
+        }
+        return result
     }
+
+    private func tripCost(_ trip: Trip) -> Double? {
+        guard let v = vehicleStore.vehicle(withID: trip.vehicleID),
+              let conso = v.fuelConsumptionL100km,
+              fuelPricePerLiter > 0 else { return nil }
+        return trip.distanceKm / 100.0 * conso * fuelPricePerLiter
+    }
+
+    private var totalCost: Double? {
+        let costs = filteredTrips.compactMap { tripCost($0) }
+        guard !costs.isEmpty else { return nil }
+        return costs.reduce(0, +)
+    }
+
+    // MARK: - Empty state
 
     private var emptyState: some View {
         VStack(spacing: 16) {
@@ -61,32 +171,92 @@ struct TripsView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
+    // MARK: - List
+
     private var list: some View {
         List {
-            // Stats
+            // swipe-to-dismiss keyboard when scrolling
+
+            // Stats (reflect current filter)
             Section {
                 StatsRow(
                     icon: "🛣️",
                     label: String(localized: "trips.stats.count"),
-                    value: "\(tripStore.totalTrips)"
+                    value: "\(filteredTrips.count)"
                 )
                 StatsRow(
                     icon: "⏱️",
                     label: String(localized: "trips.stats.duration"),
-                    value: formatTotalDuration(tripStore.totalDurationSeconds)
+                    value: formatTotalDuration(filteredTrips.reduce(0) { $0 + $1.duration })
                 )
                 StatsRow(
                     icon: "📏",
                     label: String(localized: "trips.stats.distance"),
-                    value: formatDistance(tripStore.totalDistanceMeters)
+                    value: formatDistance(filteredTrips.reduce(0) { $0 + $1.distanceMeters })
                 )
                 StatsRow(
                     icon: "💨",
                     label: String(localized: "trips.stats.maxspeed"),
-                    value: String(format: "%.0f km/h", tripStore.maxSpeedAllTime)
+                    value: String(format: "%.0f km/h", filteredTrips.map(\.maxSpeedKmh).max() ?? 0)
                 )
+                // Fuel price input row
+                HStack {
+                    Text("⛽")
+                    Text(String(localized: "trips.stats.fuel"))
+                    Spacer()
+                    HStack(spacing: 4) {
+                        TextField("0.00", value: $fuelPricePerLiter,
+                                  format: .number.precision(.fractionLength(2...2)))
+                            .keyboardType(.decimalPad)
+                            .focused($fuelPriceFocused)
+                            .multilineTextAlignment(.trailing)
+                            .frame(width: 58)
+                        Text("€/L")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                // Total cost (only when at least one trip has a configured vehicle)
+                if let cost = totalCost {
+                    StatsRow(
+                        icon: "💶",
+                        label: String(localized: "trips.stats.totalcost"),
+                        value: String(format: "%.2f €", cost)
+                    )
+                }
             } header: {
                 Text(String(localized: "trips.stats.header"))
+            }
+
+            // Period filter chips
+            Section {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 8) {
+                        ForEach(PeriodTag.allCases, id: \.self) { tag in
+                            FilterChip(
+                                emoji: tag.emoji,
+                                title: tag.localized,
+                                isSelected: periodTag == tag,
+                                tint: .blue
+                            ) { periodTag = tag }
+                        }
+                    }
+                    .padding(.vertical, 2)
+                }
+                .listRowInsets(EdgeInsets(top: 6, leading: 12, bottom: 6, trailing: 12))
+
+                if periodTag == .custom {
+                    DatePicker(String(localized: "trips.period.from"),
+                               selection: $customStart,
+                               in: ...customEnd,
+                               displayedComponents: .date)
+                    DatePicker(String(localized: "trips.period.to"),
+                               selection: $customEnd,
+                               in: customStart...,
+                               displayedComponents: .date)
+                }
+            } header: {
+                Text(String(localized: "trips.period.header"))
             }
 
             // Vehicle filter chips
@@ -119,21 +289,41 @@ struct TripsView: View {
 
             // Trips
             Section {
-                ForEach(filteredTrips) { trip in
-                    NavigationLink {
-                        TripDetailView(trip: trip)
-                    } label: {
-                        TripRow(
-                            trip: trip,
-                            vehicle: vehicleStore.vehicle(withID: trip.vehicleID)
-                        )
+                if filteredTrips.isEmpty {
+                    Text(String(localized: "trips.filter.empty"))
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding(.vertical, 8)
+                        .listRowBackground(Color.clear)
+                } else {
+                    ForEach(filteredTrips) { trip in
+                        NavigationLink {
+                            TripDetailView(trip: trip)
+                        } label: {
+                            TripRow(
+                                trip: trip,
+                                vehicle: vehicleStore.vehicle(withID: trip.vehicleID),
+                                cost: tripCost(trip)
+                            )
+                        }
                     }
-                }
-                .onDelete { indexSet in
-                    indexSet.map { filteredTrips[$0] }.forEach(tripStore.delete)
+                    .onDelete { indexSet in
+                        indexSet.map { filteredTrips[$0] }.forEach(tripStore.delete)
+                    }
                 }
             } header: {
                 Text(String(localized: "trips.history.header"))
+            }
+        }
+        .scrollDismissesKeyboard(.interactively)
+        .toolbar {
+            ToolbarItemGroup(placement: .keyboard) {
+                Spacer()
+                Button(String(localized: "trips.keyboard.done")) {
+                    fuelPriceFocused = false
+                }
+                .fontWeight(.semibold)
             }
         }
     }
@@ -199,6 +389,7 @@ private struct FilterChip: View {
 private struct TripRow: View {
     let trip: Trip
     let vehicle: Vehicle?
+    var cost: Double? = nil
 
     var body: some View {
         HStack(spacing: 12) {
@@ -219,12 +410,13 @@ private struct TripRow: View {
                 Text(trip.startDate.formatted(date: .abbreviated, time: .shortened))
                     .font(.caption2)
                     .foregroundStyle(.secondary)
-                HStack(spacing: 6) {
+                VStack(alignment: .leading, spacing: 3) {
                     Label(durationString, systemImage: "clock")
-                    Text("•").foregroundStyle(.tertiary)
                     Label(distanceString, systemImage: "ruler")
-                    Text("•").foregroundStyle(.tertiary)
                     Label(String(format: "%.0f km/h", trip.maxSpeedKmh), systemImage: "speedometer")
+                    if let c = cost {
+                        Label(String(format: "%.2f €", c), systemImage: "fuelpump")
+                    }
                 }
                 .font(.caption2)
                 .foregroundStyle(.secondary)
@@ -259,6 +451,7 @@ struct TripDetailView: View {
     let trip: Trip
     @EnvironmentObject private var tripStore: TripStore
     @EnvironmentObject private var vehicleStore: VehicleStore
+    @AppStorage(UDKey.fuelPricePerLiter) private var fuelPricePerLiter: Double = 1.85
 
     var body: some View {
         ScrollView {
@@ -376,10 +569,23 @@ struct TripDetailView: View {
             DetailRow(icon: triggerIcon(trip.trigger),
                       label: String(localized: "trip.trigger"),
                       value: triggerLabel(trip.trigger))
+            if let cost = tripCost {
+                Divider().padding(.leading, 44)
+                DetailRow(icon: "fuelpump",
+                          label: String(localized: "trip.cost"),
+                          value: String(format: "%.2f €", cost))
+            }
         }
         .background(.ultraThinMaterial)
         .clipShape(RoundedRectangle(cornerRadius: 16))
         .padding(.horizontal)
+    }
+
+    private var tripCost: Double? {
+        guard let v = vehicleStore.vehicle(withID: trip.vehicleID),
+              let conso = v.fuelConsumptionL100km,
+              fuelPricePerLiter > 0 else { return nil }
+        return trip.distanceKm / 100.0 * conso * fuelPricePerLiter
     }
 
     private func region(for coords: [CLLocationCoordinate2D]) -> MKCoordinateRegion {

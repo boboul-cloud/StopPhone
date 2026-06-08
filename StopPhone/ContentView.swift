@@ -70,8 +70,18 @@ struct ContentView: View {
             if speedMonitor.authorizationStatus == .notDetermined {
                 speedMonitor.requestPermission()
             }
-            await blockingManager.requestAuthorization()
+            // Request FamilyControls + notification authorization in the background.
+            // Do NOT await it here: on iPad, AuthorizationCenter can hang indefinitely
+            // when Screen Time is not configured, causing infinite loading (App Review 2.1a).
+            Task { await blockingManager.requestAuthorization() }
             blockingManager.observeMonitors(speed: speedMonitor, bluetooth: bluetoothMonitor)
+            withAnimation(.easeOut(duration: 0.35)) { showInitializing = false }
+        }
+        // Safety net: force-dismiss the loading veil after 3 s in case the task
+        // is delayed (e.g. system permission dialogs on first launch on iPad).
+        .task {
+            try? await Task.sleep(for: .seconds(3))
+            guard showInitializing else { return }
             withAnimation(.easeOut(duration: 0.35)) { showInitializing = false }
         }
     }
@@ -220,36 +230,37 @@ struct ContentView: View {
 
             Divider()
 
-            if blockingManager.isAuthorized {
-                let hasCustom = !blockingManager.activitySelection.categoryTokens.isEmpty
-                                || !blockingManager.activitySelection.applicationTokens.isEmpty
-                BlockingRow(
-                    emoji: blockingManager.totalBlockMode ? "🔒" : "📵",
-                    title: blockingManager.totalBlockMode
-                        ? String(localized: "block.screentime.total")
-                        : (hasCustom
-                            ? String(localized: "block.screentime.custom")
-                            : String(localized: "block.screentime.all")),
-                    subtitle: blockingManager.totalBlockMode
-                        ? String(localized: "block.screentime.total.sub")
-                        : (hasCustom
-                            ? String(format: String(localized: "block.screentime.custom.sub"),
-                                     blockingManager.activitySelection.categoryTokens.count
-                                     + blockingManager.activitySelection.applicationTokens.count)
-                            : String(localized: "block.screentime.all.sub")),
-                    isBlocked: blockingManager.isBlocking
-                )
-            } else {
-                BlockingRow(emoji: "📵",
-                            title: String(localized: "block.overlay"),
-                            subtitle: String(localized: "block.overlay.sub"),
-                            isBlocked: blockingManager.isBlocking)
-            }
+            Text(String(localized: "status.card.caption"))
+                .font(.caption)
+                .foregroundStyle(.tertiary)
 
-            BlockingRow(emoji: "🔔",
-                        title: String(localized: "block.notif"),
-                        subtitle: String(localized: "block.notif.sub"),
-                        isBlocked: blockingManager.isBlocking)
+            // Active feature chips
+            FlowRow(spacing: 8) {
+                if blockingManager.isAuthorized {
+                    let hasCustom = !blockingManager.activitySelection.categoryTokens.isEmpty
+                                    || !blockingManager.activitySelection.applicationTokens.isEmpty
+                    StatusChip(
+                        emoji: blockingManager.totalBlockMode ? "🔒" : "📵",
+                        label: blockingManager.totalBlockMode
+                            ? String(localized: "chip.block.total")
+                            : (hasCustom
+                                ? String(localized: "chip.block.custom")
+                                : String(localized: "chip.block.all")),
+                        active: blockingManager.isBlocking
+                    )
+                } else {
+                    StatusChip(emoji: "🖥️", label: String(localized: "chip.overlay"),
+                               active: blockingManager.isBlocking)
+                }
+                if blockingManager.notificationsEnabled {
+                    StatusChip(emoji: "🔔", label: String(localized: "chip.notif"),
+                               active: blockingManager.isBlocking)
+                }
+                if blockingManager.voiceAlertEnabled {
+                    StatusChip(emoji: "🔊", label: String(localized: "chip.voice"),
+                               active: blockingManager.isBlocking)
+                }
+            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding()
@@ -537,6 +548,46 @@ struct DrivingOverlay: View {
         .onChange(of: speedMonitor.isAboveThreshold) { _, isAbove in
             if isAbove { dismissed = false }
         }
+    }
+}
+
+// MARK: - StatusChip
+
+private struct StatusChip: View {
+    let emoji: String
+    let label: String
+    let active: Bool
+
+    var body: some View {
+        HStack(spacing: 5) {
+            Text(emoji).font(.caption)
+            Text(label)
+                .font(.caption.weight(.medium))
+        }
+        .padding(.horizontal, 10)
+        .padding(.vertical, 5)
+        .background(active ? Color.red.opacity(0.12) : Color.secondary.opacity(0.10))
+        .foregroundStyle(active ? .red : .secondary)
+        .clipShape(Capsule())
+        .overlay(Capsule().strokeBorder(active ? Color.red.opacity(0.3) : Color.clear, lineWidth: 1))
+    }
+}
+
+// MARK: - FlowRow
+
+private struct FlowRow<Content: View>: View {
+    let spacing: CGFloat
+    @ViewBuilder let content: () -> Content
+
+    var body: some View {
+        // Simple wrapping layout using _VariadicView is not available;
+        // use a fixed HStack that wraps via .fixedSize + layout trick.
+        // For a small number of chips, an HStack with wrapping via ViewThatFits is sufficient.
+        HStack(spacing: spacing) {
+            content()
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .fixedSize(horizontal: false, vertical: true)
     }
 }
 

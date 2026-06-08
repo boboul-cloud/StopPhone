@@ -23,6 +23,13 @@
 "block.overlay.sub" = "Couvre l'écran en rouge pendant la conduite";
 "block.notif" = "Notification";
 "block.notif.sub" = "Ouvre StopPhone automatiquement quand une conduite est détectée";
+"status.card.caption" = "Actif lors d'une conduite détectée :";
+"chip.block.total" = "Tout bloqué";
+"chip.block.all" = "Apps bloquées";
+"chip.block.custom" = "Apps sélectionnées bloquées";
+"chip.overlay" = "Écran d'alerte";
+"chip.notif" = "Notification";
+"chip.voice" = "Alerte vocale";
 
 /* Screen Time blocking rows */
 "block.screentime.all" = "Screen Time — Toutes les apps";
@@ -88,7 +95,7 @@
 "shortcuts.step1" = "Ouvrir l'app Raccourcis";
 "shortcuts.step2" = "Aller dans Automatisation → + → Automatisation personnelle";
 "shortcuts.step3" = "Choisir \"Bluetooth\" → sélectionner votre voiture → \"Se connecte\"";
-"shortcuts.step4" = "Ajouter l'action \"Ouvrir des URL\" → saisir : stopphone://activate";
+"shortcuts.step4" = "Ajouter l'action \"Choisir l'app\" → sélectionner StopPhone";
 "shortcuts.open" = "Ouvrir Raccourcis";
 
 /* À propos */
@@ -123,10 +130,10 @@
 "settings.total.block.footer.on" = "Toutes les apps et sites sont bloqués dès que la conduite est détectée.";
 "settings.total.block.footer.off" = "Seules les apps sélectionnées sont bloquées. Activez cette option pour tout bloquer.";
 
-/* Voix */
-"settings.section.voice" = "Alerte vocale";
-"settings.voice.toggle" = "Annonce vocale en début de blocage";
-"settings.voice.footer" = "La voix se diffuse automatiquement vers les haut-parleurs du véhicule via Bluetooth.";
+/* Voix / Alertes */
+"settings.section.alerts" = "Alertes";
+"settings.notif.toggle" = "Notification au démarrage du blocage";
+"settings.alerts.footer" = "Désactivez les notifications pour un mode totalement silencieux. La voix se diffuse via Bluetooth quand votre véhicule se connecte.";
 
 /* Mode passager */
 "settings.section.passenger" = "Mode passager";
@@ -200,7 +207,33 @@
 "trips.stats.distance" = "Distance totale";
 "trips.filter.header" = "Filtrer par véhicule";
 "trips.filter.all" = "Tous";
+"trips.filter.empty" = "Aucun trajet ne correspond à ce filtre.";
 "trips.vehicle.unknown" = "Véhicule inconnu";
+
+/* Filtre par période */
+"trips.period.header" = "Filtrer par période";
+"trips.period.all" = "Tout";
+"trips.period.today" = "Aujourd'hui";
+"trips.period.week" = "Cette semaine";
+"trips.period.month" = "Ce mois";
+"trips.period.custom" = "Personnalisé";
+"trips.period.from" = "Du";
+"trips.period.to" = "Au";
+
+/* Export */
+"trips.export.filename" = "trajets.csv";
+
+/* Carburant & coût */
+"trips.stats.fuel" = "Prix carburant";
+"trips.stats.totalcost" = "Coût total";
+"trip.cost" = "Coût estimé";
+"trips.keyboard.done" = "Valider";
+
+/* Consommation véhicule */
+"vehicles.field.consumption" = "Consommation";
+"vehicles.field.consumption.placeholder" = "Ex. : 7,5";
+"vehicles.field.consumption.footer" = "Consommation moyenne en L/100km. Utilisée pour estimer le coût des trajets.";
+"vehicles.field.consumption.unit" = "L/100km";
 
 /* Trip detail */
 "trip.start" = "Départ";
